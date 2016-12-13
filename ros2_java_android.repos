@@ -7,10 +7,6 @@ repositories:
     type: git
     url: https://github.com/esteve/Fast-RTPS.git
     version: cpp11-android
-  ros/poco_vendor:
-    type: git
-    url: https://github.com/ros2/poco_vendor.git
-    version: master
   ros2/common_interfaces:
     type: git
     url: https://github.com/ros2/common_interfaces.git
@@ -29,8 +25,8 @@ repositories:
     version: master
   ros2/rmw_fastrtps:
     type: git
-    url: https://github.com/ros2/rmw_fastrtps.git
-    version: master
+    url: https://github.com/esteve/rmw_fastrtps.git
+    version: rmw-fastrtps-c
   ros2/rmw_implementation:
     type: git
     url: https://github.com/ros2/rmw_implementation.git
