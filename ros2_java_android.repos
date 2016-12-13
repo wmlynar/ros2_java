@@ -29,8 +29,8 @@ repositories:
     version: rmw-fastrtps-c
   ros2/rmw_implementation:
     type: git
-    url: https://github.com/ros2/rmw_implementation.git
-    version: master
+    url: https://github.com/esteve/rmw_implementation.git
+    version: rmw-fastrtps-c
   ros2/rosidl:
     type: git
     url: https://github.com/ros2/rosidl.git
