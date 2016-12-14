@@ -79,6 +79,7 @@ public final class RCLJava {
     nodes = new LinkedBlockingQueue<Node>();
 
     RMW_TO_TYPESUPPORT = new ConcurrentSkipListMap<String, String>() {{
+        put("rmw_fastrtps_c", "rosidl_typesupport_introspection_c");
         put("rmw_fastrtps_cpp", "rosidl_typesupport_introspection_c");
         put("rmw_opensplice_cpp", "rosidl_typesupport_opensplice_c");
         put("rmw_connext_cpp", "rosidl_typesupport_connext_c");
