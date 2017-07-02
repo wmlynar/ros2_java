@@ -16,6 +16,7 @@
 package org.ros2.rcljava.node;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.ros2.rcljava.client.Client;
@@ -26,6 +27,8 @@ import org.ros2.rcljava.qos.QoSProfile;
 import org.ros2.rcljava.interfaces.Disposable;
 import org.ros2.rcljava.interfaces.MessageDefinition;
 import org.ros2.rcljava.interfaces.ServiceDefinition;
+import org.ros2.rcljava.parameters.ParameterType;
+import org.ros2.rcljava.parameters.ParameterVariant;
 import org.ros2.rcljava.publisher.Publisher;
 import org.ros2.rcljava.service.RMWRequestId;
 import org.ros2.rcljava.service.Service;
@@ -122,4 +125,16 @@ public interface Node extends Disposable {
   WallTimer createWallTimer(final long period, final TimeUnit unit, final Callback callback);
 
   String getName();
+
+  List<ParameterVariant> getParameters(List<String> names);
+
+  List<ParameterType> getParameterTypes(List<String> names);
+
+  List<rcl_interfaces.msg.SetParametersResult> setParameters(List<ParameterVariant> parameters);
+
+  rcl_interfaces.msg.SetParametersResult setParametersAtomically(List<ParameterVariant> parameters);
+
+  List<rcl_interfaces.msg.ParameterDescriptor> describeParameters(List<String> names);
+
+  rcl_interfaces.msg.ListParametersResult listParameters(List<String> prefixes, long depth);
 }

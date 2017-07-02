@@ -10,6 +10,7 @@ find_package(rcljava_common REQUIRED)
 find_package(rmw REQUIRED)
 find_package(rmw_implementation_cmake REQUIRED)
 find_package(builtin_interfaces REQUIRED)
+find_package(rcl_interfaces REQUIRED)
 
 include(CrossCompilingExtra)
 
@@ -112,8 +113,8 @@ endforeach()
 set(${PROJECT_NAME}_sources
   "src/main/java/org/ros2/rcljava/RCLJava.java"
   "src/main/java/org/ros2/rcljava/Time.java"
-  "src/main/java/org/ros2/rcljava/client/ClientImpl.java"
   "src/main/java/org/ros2/rcljava/client/Client.java"
+  "src/main/java/org/ros2/rcljava/client/ClientImpl.java"
   "src/main/java/org/ros2/rcljava/concurrent/Callback.java"
   "src/main/java/org/ros2/rcljava/concurrent/RCLFuture.java"
   "src/main/java/org/ros2/rcljava/consumers/BiConsumer.java"
@@ -126,20 +127,29 @@ set(${PROJECT_NAME}_sources
   "src/main/java/org/ros2/rcljava/executors/SingleThreadedExecutor.java"
   "src/main/java/org/ros2/rcljava/node/BaseComposableNode.java"
   "src/main/java/org/ros2/rcljava/node/ComposableNode.java"
-  "src/main/java/org/ros2/rcljava/node/NodeImpl.java"
   "src/main/java/org/ros2/rcljava/node/Node.java"
-  "src/main/java/org/ros2/rcljava/publisher/PublisherImpl.java"
+  "src/main/java/org/ros2/rcljava/node/NodeImpl.java"
+  "src/main/java/org/ros2/rcljava/parameters/client/AsyncParametersClient.java"
+  "src/main/java/org/ros2/rcljava/parameters/client/AsyncParametersClientImpl.java"
+  "src/main/java/org/ros2/rcljava/parameters/client/SyncParametersClient.java"
+  "src/main/java/org/ros2/rcljava/parameters/client/SyncParametersClientImpl.java"
+  "src/main/java/org/ros2/rcljava/parameters/ParameterNames.java"
+  "src/main/java/org/ros2/rcljava/parameters/ParameterType.java"
+  "src/main/java/org/ros2/rcljava/parameters/ParameterVariant.java"
+  "src/main/java/org/ros2/rcljava/parameters/service/ParameterService.java"
+  "src/main/java/org/ros2/rcljava/parameters/service/ParameterServiceImpl.java"
   "src/main/java/org/ros2/rcljava/publisher/Publisher.java"
+  "src/main/java/org/ros2/rcljava/publisher/PublisherImpl.java"
   "src/main/java/org/ros2/rcljava/qos/policies/Durability.java"
   "src/main/java/org/ros2/rcljava/qos/policies/History.java"
   "src/main/java/org/ros2/rcljava/qos/policies/QoSPolicy.java"
   "src/main/java/org/ros2/rcljava/qos/policies/Reliability.java"
   "src/main/java/org/ros2/rcljava/qos/QoSProfile.java"
   "src/main/java/org/ros2/rcljava/service/RMWRequestId.java"
-  "src/main/java/org/ros2/rcljava/service/ServiceImpl.java"
   "src/main/java/org/ros2/rcljava/service/Service.java"
-  "src/main/java/org/ros2/rcljava/subscription/SubscriptionImpl.java"
+  "src/main/java/org/ros2/rcljava/service/ServiceImpl.java"
   "src/main/java/org/ros2/rcljava/subscription/Subscription.java"
+  "src/main/java/org/ros2/rcljava/subscription/SubscriptionImpl.java"
   "src/main/java/org/ros2/rcljava/time/ClockType.java"
   "src/main/java/org/ros2/rcljava/timer/Timer.java"
   "src/main/java/org/ros2/rcljava/timer/WallTimer.java"
@@ -153,6 +163,7 @@ add_jar("${PROJECT_NAME}_jar"
   INCLUDE_JARS
   ${rcljava_common_JARS}
   ${builtin_interfaces_JARS}
+  ${rcl_interfaces_JARS}
 )
 
 install_jar("${PROJECT_NAME}_jar" "share/${PROJECT_NAME}/java")

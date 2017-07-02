@@ -17,6 +17,10 @@
   <exec_depend>rmw_implementation</exec_depend>
   <exec_depend>rosidl_generator_c</exec_depend>
   <exec_depend>rosidl_parser</exec_depend>
+
+  <exec_depend>rmw_implementation_cmake</exec_depend>
+  <exec_depend>rcl</exec_depend>
+  <exec_depend>rcl_interfaces</exec_depend>
   <exec_depend>builtin_interfaces</exec_depend>
 
   <exec_depend>rmw_implementation_cmake</exec_depend>
@@ -25,7 +29,10 @@
   <build_depend>rmw_implementation_cmake</build_depend>
   <build_depend>rmw</build_depend>
   <build_depend>rcl</build_depend>
+  <build_depend>rcl_interfaces</build_depend>
   <build_depend>builtin_interfaces</build_depend>
+
+  <build_export_depend>rcl_interfaces</build_export_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

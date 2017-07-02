@@ -25,6 +25,8 @@ import org.ros2.rcljava.consumers.TriConsumer;
 import org.ros2.rcljava.qos.QoSProfile;
 import org.ros2.rcljava.interfaces.MessageDefinition;
 import org.ros2.rcljava.interfaces.ServiceDefinition;
+import org.ros2.rcljava.parameters.ParameterType;
+import org.ros2.rcljava.parameters.ParameterVariant;
 import org.ros2.rcljava.publisher.Publisher;
 import org.ros2.rcljava.publisher.PublisherImpl;
 import org.ros2.rcljava.service.RMWRequestId;
@@ -43,6 +45,10 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -94,6 +100,10 @@ public class NodeImpl implements Node {
 
   private final String name;
 
+  private Object mutex;
+
+  private Map<String, ParameterVariant> parameters;
+
   /**
    * Constructor.
    *
@@ -108,6 +118,8 @@ public class NodeImpl implements Node {
     this.services = new LinkedBlockingQueue<Service>();
     this.clients = new LinkedBlockingQueue<Client>();
     this.timers = new LinkedBlockingQueue<Timer>();
+    this.mutex = new Object();
+    this.parameters = new ConcurrentHashMap<String, ParameterVariant>();
   }
 
   /**
@@ -325,5 +337,120 @@ public class NodeImpl implements Node {
    */
   public final String getName() {
     return this.name;
+  }
+
+  public List<ParameterVariant> getParameters(List<String> names) {
+    synchronized (mutex) {
+      List<ParameterVariant> results = new Vector<ParameterVariant>();
+      for (String name : names) {
+        for (Map.Entry<String, ParameterVariant> entry : this.parameters.entrySet()) {
+          if (name == entry.getKey()) {
+            results.add(entry.getValue());
+          }
+        }
+      }
+      return results;
+    }
+  }
+
+  public List<ParameterType> getParameterTypes(List<String> names) {
+    synchronized (mutex) {
+      List<ParameterType> results = new Vector<ParameterType>();
+      for (String name : names) {
+        for (Map.Entry<String, ParameterVariant> entry : this.parameters.entrySet()) {
+          if (name == entry.getKey()) {
+            results.add(entry.getValue().getType());
+          } else {
+            results.add(ParameterType.fromByte(rcl_interfaces.msg.ParameterType.PARAMETER_NOT_SET));
+          }
+        }
+      }
+      return results;
+    }
+  }
+
+  public List<rcl_interfaces.msg.SetParametersResult> setParameters(
+      List<ParameterVariant> parameters) {
+    List<rcl_interfaces.msg.SetParametersResult> results =
+        new Vector<rcl_interfaces.msg.SetParametersResult>();
+    for (ParameterVariant p : parameters) {
+      rcl_interfaces.msg.SetParametersResult result =
+          this.setParametersAtomically(java.util.Arrays.asList(new ParameterVariant[] {p}));
+      results.add(result);
+    }
+    return results;
+  }
+
+  public rcl_interfaces.msg.SetParametersResult setParametersAtomically(
+      List<ParameterVariant> parameters) {
+    synchronized (mutex) {
+      rcl_interfaces.msg.SetParametersResult result = new rcl_interfaces.msg.SetParametersResult();
+      for (ParameterVariant p : parameters) {
+        this.parameters.put(p.getName(), p);
+      }
+      result.setSuccessful(true);
+      return result;
+    }
+  }
+
+  public List<rcl_interfaces.msg.ParameterDescriptor> describeParameters(
+      List<String> names) {
+    synchronized (mutex) {
+      List<rcl_interfaces.msg.ParameterDescriptor> results =
+          new Vector<rcl_interfaces.msg.ParameterDescriptor>();
+      for (String name : names) {
+        for (Map.Entry<String, ParameterVariant> entry : this.parameters.entrySet()) {
+          if (name == entry.getKey()) {
+            rcl_interfaces.msg.ParameterDescriptor parameterDescriptor =
+                new rcl_interfaces.msg.ParameterDescriptor();
+            parameterDescriptor.setName(entry.getKey());
+            parameterDescriptor.setType(entry.getValue().getType().getValue());
+            results.add(parameterDescriptor);
+          }
+        }
+      }
+      return results;
+    }
+  }
+
+  public rcl_interfaces.msg.ListParametersResult listParameters(
+      List<String> prefixes, long depth) {
+    synchronized (mutex) {
+      rcl_interfaces.msg.ListParametersResult result =
+          new rcl_interfaces.msg.ListParametersResult();
+
+      String separator = ".";
+      for (Map.Entry<String, ParameterVariant> entry : this.parameters.entrySet()) {
+        boolean getAll =
+            (prefixes.size() == 0)
+            && ((depth == rcl_interfaces.srv.ListParameters_Request.DEPTH_RECURSIVE)
+                   || ((entry.getKey().length() - entry.getKey().replace(separator, "").length())
+                          < depth));
+        boolean prefixMatches = false;
+        for (String prefix : prefixes) {
+          if (entry.getKey() == prefix) {
+            prefixMatches = true;
+            break;
+          } else if (entry.getKey().startsWith(prefix + separator)) {
+            int length = prefix.length();
+            String substr = entry.getKey().substring(length);
+            prefixMatches = (depth == rcl_interfaces.srv.ListParameters_Request.DEPTH_RECURSIVE)
+                || ((entry.getKey().length() - entry.getKey().replace(separator, "").length())
+                                < depth);
+          }
+        }
+        if (getAll || prefixMatches) {
+          result.getNames().add(entry.getKey());
+          int lastSeparator = entry.getKey().lastIndexOf(separator);
+          if (-1 != lastSeparator) {
+            String prefix = entry.getKey().substring(0, lastSeparator);
+            if (!result.getPrefixes().contains(prefix)) {
+              result.getPrefixes().add(prefix);
+            }
+          }
+        }
+      }
+      return result;
+    }
   }
 }

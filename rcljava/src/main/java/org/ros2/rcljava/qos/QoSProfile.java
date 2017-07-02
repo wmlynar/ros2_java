@@ -65,7 +65,7 @@ public class QoSProfile {
   public static final QoSProfile SENSOR_DATA =
       new QoSProfile(History.KEEP_LAST, 5, Reliability.BEST_EFFORT, Durability.VOLATILE, false);
 
-  public static final QoSProfile PARAMETER =
+  public static final QoSProfile PARAMETERS =
       new QoSProfile(History.KEEP_LAST, 1000, Reliability.RELIABLE, Durability.VOLATILE, false);
 
   public static final QoSProfile DEFAULT =
