@@ -50,9 +50,23 @@ macro(ament_export_jars)
       ${_AMENT_EXPORT_RELATIVE_CLASSPATH}
       ${_AMENT_EXPORT_ABSOLUTE_CLASSPATH})
 
-    ament_index_get_resource(
-      classpath_template_path "templates" "ament_build_type_gradle_classpath")
+    if(WIN32)
+      set(_ament_build_type_gradle_classpath_key "ament_build_type_gradle_classpath_bat")
+      set(_ament_build_type_gradle_classpath_filename
+        "${CMAKE_CURRENT_BINARY_DIR}/ament_build_type_gradle_classpath.bat.in")
+    else()
+      set(_ament_build_type_gradle_classpath_key "ament_build_type_gradle_classpath_sh")
+      set(_ament_build_type_gradle_classpath_filename
+        "${CMAKE_CURRENT_BINARY_DIR}/ament_build_type_gradle_classpath.sh.in")
+    endif()
 
-    ament_environment_hooks("${classpath_template_path}")
+    ament_index_get_resource(
+      classpath_template "templates" "${_ament_build_type_gradle_classpath_key}")
+
+    file(WRITE
+      "${_ament_build_type_gradle_classpath_filename}"
+      "${classpath_template}")
+
+    ament_environment_hooks("${_ament_build_type_gradle_classpath_filename}")
   endif()
 endmacro()
