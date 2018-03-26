@@ -203,6 +203,8 @@ public class BaseExecutor {
       return;
     }
 
+    WaitSet waitSet = new WaitSetImpl();
+
     long waitSetHandle = nativeGetZeroInitializedWaitSet();
 
     nativeWaitSetInit(waitSetHandle, subscriptionsSize, 0, timersSize, clientsSize, servicesSize);
@@ -216,43 +218,43 @@ public class BaseExecutor {
     nativeWaitSetClearClients(waitSetHandle);
 
     for (Map.Entry<Long, Subscription> entry : this.subscriptionHandles) {
-      nativeWaitSetAddSubscription(waitSetHandle, entry.getKey());
+      waitSet.addSubscription(entry.getValue());
     }
 
     for (Map.Entry<Long, Timer> entry : this.timerHandles) {
-      nativeWaitSetAddTimer(waitSetHandle, entry.getKey());
+      waitSet.addTimer(entry.getValue());
     }
 
     for (Map.Entry<Long, Service> entry : this.serviceHandles) {
-      nativeWaitSetAddService(waitSetHandle, entry.getKey());
+      waitSet.addService(entry.getValue());
     }
 
     for (Map.Entry<Long, Client> entry : this.clientHandles) {
-      nativeWaitSetAddClient(waitSetHandle, entry.getKey());
+      waitSet.addClient(entry.getValue());
     }
 
-    nativeWait(waitSetHandle, timeout);
+    nativeWait(waitSet.getHandle(), timeout);
 
     for (int i = 0; i < this.subscriptionHandles.size(); ++i) {
-      if (!nativeWaitSetSubscriptionIsReady(waitSetHandle, i)) {
+      if (!waitSet.subscriptionIsReady(waitSetHandle, i)) {
         this.subscriptionHandles.get(i).setValue(null);
       }
     }
 
     for (int i = 0; i < this.timerHandles.size(); ++i) {
-      if (!nativeWaitSetTimerIsReady(waitSetHandle, i)) {
+      if (!waitSet.timerIsReady(waitSetHandle, i)) {
         this.timerHandles.get(i).setValue(null);
       }
     }
 
     for (int i = 0; i < this.serviceHandles.size(); ++i) {
-      if (!nativeWaitSetServiceIsReady(waitSetHandle, i)) {
+      if (!waitSet.serviceIsReady(waitSetHandle, i)) {
         this.serviceHandles.get(i).setValue(null);
       }
     }
 
     for (int i = 0; i < this.clientHandles.size(); ++i) {
-      if (!nativeWaitSetClientIsReady(waitSetHandle, i)) {
+      if (!waitSet.clientIsReady(waitSetHandle, i)) {
         this.clientHandles.get(i).setValue(null);
       }
     }
@@ -357,32 +359,10 @@ public class BaseExecutor {
     }
   }
 
-  private static native long nativeGetZeroInitializedWaitSet();
-
-  private static native void nativeWaitSetInit(long waitSetHandle, int numberOfSubscriptions,
-      int numberOfGuardConditions, int numberOfTimers, int numberOfClients, int numberOfServices);
-
-  private static native void nativeWaitSetClearSubscriptions(long waitSetHandle);
-
-  private static native void nativeWaitSetAddSubscription(
-      long waitSetHandle, long subscriptionHandle);
-
   private static native void nativeWait(long waitSetHandle, long timeout);
 
   private static native MessageDefinition nativeTake(
       long subscriptionHandle, Class<MessageDefinition> messageType);
-
-  private static native void nativeWaitSetClearTimers(long waitSetHandle);
-
-  private static native void nativeWaitSetClearServices(long waitSetHandle);
-
-  private static native void nativeWaitSetAddService(long waitSetHandle, long serviceHandle);
-
-  private static native void nativeWaitSetClearClients(long waitSetHandle);
-
-  private static native void nativeWaitSetAddClient(long waitSetHandle, long clientHandle);
-
-  private static native void nativeWaitSetAddTimer(long waitSetHandle, long timerHandle);
 
   private static native RMWRequestId nativeTakeRequest(long serviceHandle,
       long requestFromJavaConverterHandle, long requestToJavaConverterHandle,
@@ -395,12 +375,4 @@ public class BaseExecutor {
   private static native RMWRequestId nativeTakeResponse(long clientHandle,
       long responseFromJavaConverterHandle, long responseToJavaConverterHandle,
       long responseDestructorHandle, MessageDefinition responseMessage);
-
-  private static native boolean nativeWaitSetSubscriptionIsReady(long waitSetHandle, long index);
-
-  private static native boolean nativeWaitSetTimerIsReady(long waitSetHandle, long index);
-
-  private static native boolean nativeWaitSetServiceIsReady(long waitSetHandle, long index);
-
-  private static native boolean nativeWaitSetClientIsReady(long waitSetHandle, long index);
 }

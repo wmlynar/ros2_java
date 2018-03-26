@@ -56,6 +56,7 @@ endif()
 set(${PROJECT_NAME}_jni_sources
   "src/main/cpp/org_ros2_rcljava_RCLJava.cpp"
   "src/main/cpp/org_ros2_rcljava_Time.cpp"
+  "src/main/cpp/org_ros2_rcljava_WaitSetImpl.cpp"
   "src/main/cpp/org_ros2_rcljava_client_ClientImpl.cpp"
   "src/main/cpp/org_ros2_rcljava_executors_BaseExecutor.cpp"
   "src/main/cpp/org_ros2_rcljava_node_NodeImpl.cpp"
@@ -155,6 +156,8 @@ set(${PROJECT_NAME}_sources
   "src/main/java/org/ros2/rcljava/timer/Timer.java"
   "src/main/java/org/ros2/rcljava/timer/WallTimer.java"
   "src/main/java/org/ros2/rcljava/timer/WallTimerImpl.java"
+  "src/main/java/org/ros2/rcljava/waitset/WaitSet.java"
+  "src/main/java/org/ros2/rcljava/waitset/WaitSetImpl.java"
 )
 
 add_jar("${PROJECT_NAME}_jar"
