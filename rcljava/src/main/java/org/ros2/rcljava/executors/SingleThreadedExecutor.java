@@ -47,4 +47,12 @@ public class SingleThreadedExecutor implements Executor {
       this.spinOnce();
     }
   }
+
+  public void dispose() {
+    if (baseExecutor != null) {
+      baseExecutor.dispose();
+    }
+  }
+
+
 }

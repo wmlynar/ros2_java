@@ -121,6 +121,13 @@ Java_org_ros2_rcljava_executors_BaseExecutor_nativeWaitSetInit(
 }
 
 JNIEXPORT void JNICALL
+Java_org_ros2_rcljava_executors_BaseExecutor_nativeDisposeWaitSet(JNIEnv *, jclass, jlong wait_set_handle)
+{
+  rcl_wait_set_t * wait_set = reinterpret_cast<rcl_wait_set_t *>(wait_set_handle);
+  free(wait_set);
+}
+
+JNIEXPORT void JNICALL
 Java_org_ros2_rcljava_executors_BaseExecutor_nativeWaitSetClearSubscriptions(
   JNIEnv * env, jclass, jlong wait_set_handle)
 {

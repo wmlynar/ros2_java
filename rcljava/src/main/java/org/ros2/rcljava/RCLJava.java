@@ -89,6 +89,10 @@ public final class RCLJava {
 
       node.dispose();
     }
+
+    if (globalExecutor != null) {
+      globalExecutor.dispose();
+    }
   }
 
   static {
