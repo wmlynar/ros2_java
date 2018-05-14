@@ -29,7 +29,7 @@
 
 #include "org_ros2_rcljava_timer_WallTimerImpl.h"
 
-using rcljava_common::exceptions::rcljava_throw_exception;
+using rcljava_common::exceptions::rcljava_throw_rclexception;
 using rcljava_common::signatures::convert_from_java_signature;
 using rcljava_common::signatures::destroy_ros_message_signature;
 
