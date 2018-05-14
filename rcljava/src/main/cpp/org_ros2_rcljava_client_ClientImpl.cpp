@@ -90,6 +90,8 @@ Java_org_ros2_rcljava_client_ClientImpl_nativeDispose(
 
   rcl_ret_t ret = rcl_client_fini(client, node);
 
+  delete client;
+
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to destroy client: " + std::string(rcl_get_error_string_safe());
     rcl_reset_error();

@@ -49,7 +49,7 @@ Java_org_ros2_rcljava_node_NodeImpl_nativeCreatePublisherHandle(
 
   rosidl_message_type_support_t * ts = reinterpret_cast<rosidl_message_type_support_t *>(jts);
 
-  rcl_publisher_t * publisher = static_cast<rcl_publisher_t *>(malloc(sizeof(rcl_publisher_t)));
+  rcl_publisher_t * publisher = new rcl_publisher_t;
   *publisher = rcl_get_zero_initialized_publisher();
   rcl_publisher_options_t publisher_ops = rcl_publisher_get_default_options();
 
@@ -87,8 +87,7 @@ Java_org_ros2_rcljava_node_NodeImpl_nativeCreateSubscriptionHandle(
 
   rosidl_message_type_support_t * ts = reinterpret_cast<rosidl_message_type_support_t *>(jts);
 
-  rcl_subscription_t * subscription =
-    static_cast<rcl_subscription_t *>(malloc(sizeof(rcl_subscription_t)));
+  rcl_subscription_t * subscription = new rcl_subscription_t;
   *subscription = rcl_get_zero_initialized_subscription();
   rcl_subscription_options_t subscription_ops = rcl_subscription_get_default_options();
 
@@ -131,7 +130,7 @@ Java_org_ros2_rcljava_node_NodeImpl_nativeCreateServiceHandle(
 
   rosidl_service_type_support_t * ts = reinterpret_cast<rosidl_service_type_support_t *>(jts);
 
-  rcl_service_t * service = static_cast<rcl_service_t *>(malloc(sizeof(rcl_service_t)));
+  rcl_service_t * service = new rcl_service_t;
   *service = rcl_get_zero_initialized_service();
   rcl_service_options_t service_ops = rcl_service_get_default_options();
 
@@ -174,7 +173,7 @@ Java_org_ros2_rcljava_node_NodeImpl_nativeCreateClientHandle(
 
   rosidl_service_type_support_t * ts = reinterpret_cast<rosidl_service_type_support_t *>(jts);
 
-  rcl_client_t * client = static_cast<rcl_client_t *>(malloc(sizeof(rcl_client_t)));
+  rcl_client_t * client = new rcl_client_t;
   *client = rcl_get_zero_initialized_client();
   rcl_client_options_t client_ops = rcl_client_get_default_options();
 
@@ -206,6 +205,8 @@ Java_org_ros2_rcljava_node_NodeImpl_nativeDispose(JNIEnv * env, jclass, jlong no
 
   rcl_ret_t ret = rcl_node_fini(node);
 
+  delete node;
+
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to destroy node: " + std::string(rcl_get_error_string_safe());
     rcl_reset_error();
@@ -217,10 +218,12 @@ JNIEXPORT jlong JNICALL
 Java_org_ros2_rcljava_node_NodeImpl_nativeCreateTimerHandle(
   JNIEnv * env, jclass, jlong timer_period)
 {
-  rcl_timer_t * timer = static_cast<rcl_timer_t *>(malloc(sizeof(rcl_timer_t)));
+  rcl_timer_t * timer = new rcl_timer_t;
   *timer = rcl_get_zero_initialized_timer();
 
   rcl_ret_t ret = rcl_timer_init(timer, timer_period, NULL, rcl_get_default_allocator());
+
+  delete timer;
 
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to create timer: " + std::string(rcl_get_error_string_safe());

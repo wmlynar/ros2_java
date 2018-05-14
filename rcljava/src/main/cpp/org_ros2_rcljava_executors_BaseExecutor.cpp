@@ -80,7 +80,7 @@ convert_rmw_request_id_from_java(JNIEnv * env, jobject jrequest_id)
   assert(jsequence_number_field_id != nullptr);
   assert(jwriter_guid_field_id != nullptr);
 
-  rmw_request_id_t * request_id = static_cast<rmw_request_id_t *>(malloc(sizeof(rmw_request_id_t)));
+  rmw_request_id_t * request_id = new rmw_request_id_t;
 
   int8_t * writer_guid = request_id->writer_guid;
   request_id->sequence_number = env->GetLongField(jrequest_id, jsequence_number_field_id);
@@ -96,7 +96,7 @@ convert_rmw_request_id_from_java(JNIEnv * env, jobject jrequest_id)
 JNIEXPORT jlong JNICALL
 Java_org_ros2_rcljava_executors_BaseExecutor_nativeGetZeroInitializedWaitSet(JNIEnv *, jclass)
 {
-  rcl_wait_set_t * wait_set = static_cast<rcl_wait_set_t *>(malloc(sizeof(rcl_wait_set_t)));
+  rcl_wait_set_t * wait_set = new rcl_wait_set_t;
   *wait_set = rcl_get_zero_initialized_wait_set();
   jlong wait_set_handle = reinterpret_cast<jlong>(wait_set);
   return wait_set_handle;
