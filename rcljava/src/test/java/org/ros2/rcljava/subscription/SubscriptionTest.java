@@ -33,8 +33,8 @@ public class SubscriptionTest {
         std_msgs.msg.String.class, "test_topic", new Consumer<std_msgs.msg.String>() {
           public void accept(final std_msgs.msg.String msg) {}
         });
-    assertEquals(node.getHandle(), subscription.getNodeReference().get().getHandle());
-    assertNotEquals(0, subscription.getNodeReference().get().getHandle());
     assertNotEquals(0, subscription.getHandle());
+    subscription.dispose();
+    assertEquals(0, subscription.getHandle());
   }
 }
