@@ -68,10 +68,13 @@ fi
 
 . $AMENT_INSTALL_DIR/local_setup.sh
 
-cd $ROS2_JAVA_WS
-ament build --parallel --symlink-install --isolated --install-space $ROS2_JAVA_INSTALL_DIR --build-space $ROS2_JAVA_BUILD_DIR $@
+if [ -z "$ROS2_JAVA_SKIP_JAVA" ]; then
+  cd $ROS2_JAVA_WS
+  ament build --symlink-install --isolated --install-space $ROS2_JAVA_INSTALL_DIR --build-space $ROS2_JAVA_BUILD_DIR $@
+fi
 
 if [ -z "$ROS2_JAVA_SKIP_TESTS" ]; then
+  cd $ROS2_JAVA_WS
   . $ROS2_JAVA_INSTALL_DIR/local_setup.sh
 
   ament test --symlink-install --isolated --install-space $ROS2_JAVA_INSTALL_DIR --build-space $ROS2_JAVA_BUILD_DIR --only-packages ament_cmake_export_jars rcljava rcljava_common rosidl_generator_java | tee /tmp/test_logging.log
