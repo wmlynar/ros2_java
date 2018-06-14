@@ -64,16 +64,6 @@ if [ -z "$ROS2_JAVA_SKIP_FETCH" ]; then
   test -e $ROS2_ANDROID_WS/src/ros2/rmw_fastrtps/rmw_fastrtps_c/package.xml && touch rosidl_generator_cpp/AMENT_IGNORE
   touch rosidl_generator_py/AMENT_IGNORE
   test -e $ROS2_ANDROID_WS/src/ros2/rmw_fastrtps/rmw_fastrtps_c/package.xml && touch rosidl_typesupport_introspection_cpp/AMENT_IGNORE
-
-  cd $ROS2_ANDROID_WS/src/ros2/rosidl_typesupport
-  patch -p1 < ../../ros2_java/ros2_java/rosidl_typesupport_ros2_android.patch
-
-#  cd $ROS2_ANDROID_WS/src/eProsima/Fast-RTPS
-#  git submodule init
-#  git submodule update
-#  if [ -n "$TRAVIS" ]; then
-#    find $ROS2_ANDROID_WS/src/ros2/examples/rclcpp $ROS2_ANDROID_WS/src/ros2/examples/rclpy -name "package.xml" -printf "%h\n" | xargs -i touch {}/AMENT_IGNORE
-#  fi
 fi
 
 cd $ROS2_ANDROID_WS/src/ros2/rmw_fastrtps

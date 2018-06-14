@@ -49,14 +49,10 @@ if [ -z "$ROS2_JAVA_SKIP_FETCH" ]; then
   cd src/ros2
 #  vcs custom --git --args rebase origin/master || true
 
-  cd $ROS2_JAVA_WS/src/ros2/rosidl_typesupport
-  if [ -z "$TRAVIS" ]; then
-    patch -p1 < ../../ros2_java/ros2_java/rosidl_typesupport_ros2_java.patch
-  else
-    patch -p1 < ../../ros2_java/ros2_java/rosidl_typesupport_ros2_java_travis.patch
-  fi
-
   if [ -n "$TRAVIS" ]; then
+    touch $ROS2_ANDROID_WS/src/ros2/rosidl/python_cmake_module/AMENT_IGNORE
+    touch $ROS2_ANDROID_WS/src/ros2/rosidl/rosidl_generator_py/AMENT_IGNORE
+
     find $ROS2_JAVA_WS/src/ros2/examples/rclcpp $ROS2_JAVA_WS/src/ros2/examples/rclpy -name "package.xml" -printf "%h\n" | xargs -i touch {}/AMENT_IGNORE
   fi
 fi
