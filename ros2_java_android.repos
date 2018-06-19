@@ -6,7 +6,7 @@ repositories:
   eProsima/Fast-RTPS:
     type: git
     url: https://github.com/esteve/Fast-RTPS.git
-    version: portable
+    version: android-updates
   ros2/ament_cmake_ros:
     type: git
     url: https://github.com/ros2/ament_cmake_ros.git
