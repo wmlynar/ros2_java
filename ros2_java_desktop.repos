@@ -7,6 +7,10 @@ repositories:
     type: git
     url: https://github.com/eProsima/Fast-RTPS.git
     version: 7a0b0fe7ca8d2c4ea41e36744c6024c263a6505a
+  osrf/osrf_testing_tools_cpp:
+    type: git
+    url: https://github.com/osrf/osrf_testing_tools_cpp.git
+    version: master
   ros/class_loader:
     type: git
     url: https://github.com/ros/class_loader.git
