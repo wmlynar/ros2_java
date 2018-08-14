@@ -18,6 +18,7 @@ mkdir -p $ROS2_JAVA_DIR
 mkdir -p $AMENT_WS/src
 mkdir -p $ROS2_JAVA_WS/src
 
+python3 -m pip install -U setuptools
 python3 -m pip install -U git+https://github.com/colcon/colcon-gradle
 python3 -m pip install -U git+https://github.com/colcon/colcon-ros-gradle
 
