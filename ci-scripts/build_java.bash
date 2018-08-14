@@ -60,14 +60,14 @@ fi
 
 if [ -z "$ROS2_JAVA_SKIP_AMENT" ]; then
   cd $AMENT_WS
-  colcon build --install-base $AMENT_INSTALL_DIR --build-base $AMENT_BUILD_DIR
+  colcon build --install-base $AMENT_INSTALL_DIR --build-base $AMENT_BUILD_DIR --cmake-args -DBUILD_TESTING=OFF
 fi
 
 source $AMENT_INSTALL_DIR/local_setup.bash
 
 if [ -z "$ROS2_JAVA_SKIP_JAVA" ]; then
   cd $ROS2_JAVA_WS
-  colcon build --install-base $ROS2_JAVA_INSTALL_DIR --build-base $ROS2_JAVA_BUILD_DIR $@
+  colcon build --install-base $ROS2_JAVA_INSTALL_DIR --build-base $ROS2_JAVA_BUILD_DIR --cmake-args -DBUILD_TESTING=OFF $@
 fi
 
 if [ -z "$ROS2_JAVA_SKIP_TESTS" ]; then
