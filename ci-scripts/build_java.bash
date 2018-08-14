@@ -63,7 +63,7 @@ if [ -z "$ROS2_JAVA_SKIP_AMENT" ]; then
   colcon build --install-base $AMENT_INSTALL_DIR --build-base $AMENT_BUILD_DIR
 fi
 
-. $AMENT_INSTALL_DIR/local_setup.sh
+source $AMENT_INSTALL_DIR/local_setup.bash
 
 if [ -z "$ROS2_JAVA_SKIP_JAVA" ]; then
   cd $ROS2_JAVA_WS
@@ -72,7 +72,7 @@ fi
 
 if [ -z "$ROS2_JAVA_SKIP_TESTS" ]; then
   cd $ROS2_JAVA_WS
-  . $ROS2_JAVA_INSTALL_DIR/local_setup.sh
+  source $ROS2_JAVA_INSTALL_DIR/local_setup.bash
 
   colcon test --install-base $ROS2_JAVA_INSTALL_DIR --build-base $ROS2_JAVA_BUILD_DIR --packages-select ament_cmake_export_jars rcljava rcljava_common rosidl_generator_java | tee /tmp/test_logging.log
 
