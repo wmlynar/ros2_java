@@ -18,6 +18,9 @@ mkdir -p $ROS2_JAVA_DIR
 mkdir -p $AMENT_WS/src
 mkdir -p $ROS2_JAVA_WS/src
 
+python3 -m pip install -U git+https://github.com/colcon/colcon-gradle
+python3 -m pip install -U git+https://github.com/colcon/colcon-ros-gradle
+
 if [ -z "$ROS2_JAVA_BRANCH" ]; then
   ROS2_JAVA_BRANCH=master
 fi
@@ -56,21 +59,21 @@ fi
 
 if [ -z "$ROS2_JAVA_SKIP_AMENT" ]; then
   cd $AMENT_WS
-  $AMENT_WS/src/ament/ament_tools/scripts/ament.py build --parallel --symlink-install --isolated --install-space $AMENT_INSTALL_DIR --build-space $AMENT_BUILD_DIR
+  colcon build --install-base $AMENT_INSTALL_DIR --build-base $AMENT_BUILD_DIR
 fi
 
 . $AMENT_INSTALL_DIR/local_setup.sh
 
 if [ -z "$ROS2_JAVA_SKIP_JAVA" ]; then
   cd $ROS2_JAVA_WS
-  ament build --parallel --symlink-install --isolated --install-space $ROS2_JAVA_INSTALL_DIR --build-space $ROS2_JAVA_BUILD_DIR $@
+  colcon build --install-base $ROS2_JAVA_INSTALL_DIR --build-base $ROS2_JAVA_BUILD_DIR $@
 fi
 
 if [ -z "$ROS2_JAVA_SKIP_TESTS" ]; then
   cd $ROS2_JAVA_WS
   . $ROS2_JAVA_INSTALL_DIR/local_setup.sh
 
-  ament test --symlink-install --isolated --install-space $ROS2_JAVA_INSTALL_DIR --build-space $ROS2_JAVA_BUILD_DIR --only-packages ament_cmake_export_jars rcljava rcljava_common rosidl_generator_java | tee /tmp/test_logging.log
+  colcon test --install-base $ROS2_JAVA_INSTALL_DIR --build-base $ROS2_JAVA_BUILD_DIR --packages-select ament_cmake_export_jars rcljava rcljava_common rosidl_generator_java | tee /tmp/test_logging.log
 
   ! grep -q 'The following tests FAILED' /tmp/test_logging.log
 
