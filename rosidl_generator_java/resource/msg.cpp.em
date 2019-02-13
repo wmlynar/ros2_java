@@ -16,8 +16,8 @@ static_assert(sizeof(jlong) >= sizeof(std::intptr_t), "jlong must be able to sto
 #include "rosidl_generator_c/string.h"
 #include "rosidl_generator_c/string_functions.h"
 
-#include "rosidl_generator_c/primitives_array.h"
-#include "rosidl_generator_c/primitives_array_functions.h"
+#include "rosidl_generator_c/primitives_sequence.h"
+#include "rosidl_generator_c/primitives_sequence_functions.h"
 
 #include "rcljava_common/exceptions.h"
 #include "rcljava_common/signatures.h"
@@ -214,17 +214,17 @@ normalized_type = get_normalized_type(field.type)
     jmethodID _jlist_@(field.name)_size_mid = env->GetMethodID(_j@(list_normalized_type)_class_global, "size", "()I");
     jint _jlist_@(field.name)_size = env->CallIntMethod(_jlist_@(field.name)_object, _jlist_@(field.name)_size_mid);
 @[            if field.type.type == 'string']@
-    if (!rosidl_generator_c__String__Array__init(&(ros_message->@(field.name)), _jlist_@(field.name)_size)) {
-      rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to create String__Array ros_message");
+    if (!rosidl_generator_c__String__Sequence__init(&(ros_message->@(field.name)), _jlist_@(field.name)_size)) {
+      rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to create String__Sequence ros_message");
     }
 @[            else]@
 @[                if field.type.is_primitive_type()]@
-    if (!rosidl_generator_c__@(field.type.type)__Array__init(&(ros_message->@(field.name)), _jlist_@(field.name)_size)) {
-      rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to create @(field.type.type)__Array ros_message");
+    if (!rosidl_generator_c__@(field.type.type)__Sequence__init(&(ros_message->@(field.name)), _jlist_@(field.name)_size)) {
+      rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to create @(field.type.type)__Sequence ros_message");
     }
 @[                else]@
-    if (!@(field.type.pkg_name)__msg__@(field.type.type)__Array__init(&(ros_message->@(field.name)), _jlist_@(field.name)_size)) {
-      rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to create @(field.type.type)__Array ros_message");
+    if (!@(field.type.pkg_name)__msg__@(field.type.type)__Sequence__init(&(ros_message->@(field.name)), _jlist_@(field.name)_size)) {
+      rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to create @(field.type.type)__Sequence ros_message");
     }
 
 @[                end if]@
