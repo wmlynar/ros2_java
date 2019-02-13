@@ -24,6 +24,6 @@ JNIEXPORT jlong JNICALL Java_@(jni_package_name)_@(subfolder)_@(jni_type_name)_g
 JNIEXPORT jlong JNICALL Java_@(jni_package_name)_@(subfolder)_@(jni_type_name)_getServiceTypeSupport(JNIEnv *, jclass)
 {
   const rosidl_service_type_support_t * ts = ROSIDL_GET_SRV_TYPE_SUPPORT(
-    @(spec.pkg_name), @(spec.srv_name));
+    @(spec.pkg_name), @(subfolder), @(spec.srv_name));
   return reinterpret_cast<jlong>(ts);
 }
