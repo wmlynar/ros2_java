@@ -13,12 +13,12 @@ WORK IN PROGRESS
 TLDR
 ----
 
-You can install using all the steps below using following script
+You can install ros2_java with the following script (the script collects all the steps from below)
 
 ```
-wget https://raw.githubusercontent.com/wmlynar/ros2_java/master/install_ros2_java.repos
-chmod +x install_ros2_java.repos
-./install_ros2_java.repos
+wget https://raw.githubusercontent.com/wmlynar/ros2_java/master/install_ros2_java.sh
+chmod +x install_ros2_java.sh
+./install_ros2_java.sh
 ```
 
 Step 0. Prequisities
