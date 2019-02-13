@@ -22,6 +22,7 @@
 #include "rcl/node.h"
 #include "rcl/rcl.h"
 #include "rcl/timer.h"
+#include "rcl/wait.h"
 #include "rmw/rmw.h"
 #include "rosidl_generator_c/message_type_support_struct.h"
 
@@ -34,6 +35,8 @@ using rcljava_common::exceptions::rcljava_throw_rclexception;
 using rcljava_common::signatures::convert_from_java_signature;
 using rcljava_common::signatures::convert_to_java_signature;
 using rcljava_common::signatures::destroy_ros_message_signature;
+
+extern rcl_context_t context;
 
 jobject
 convert_rmw_request_id_to_java(JNIEnv * env, rmw_request_id_t * request_id)

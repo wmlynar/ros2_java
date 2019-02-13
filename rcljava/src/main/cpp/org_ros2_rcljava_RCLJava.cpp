@@ -35,11 +35,23 @@ using rcljava_common::signatures::convert_from_java_signature;
 using rcljava_common::signatures::convert_to_java_signature;
 using rcljava_common::signatures::destroy_ros_message_signature;
 
+//TODO(wmlynar): let init return the context instead of making it global
+rcl_context_t context;
+
 JNIEXPORT void JNICALL
 Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass)
 {
   // TODO(esteve): parse args
-  rcl_ret_t ret = rcl_init(0, nullptr, rcl_get_default_allocator());
+  context = rcl_get_zero_initialized_context();
+  rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
+  rcl_ret_t ret = rcl_init_options_init(&init_options, rcl_get_default_allocator());  
+  if (ret != RCL_RET_OK) {
+    std::string msg = "Failed to init: " + std::string(rcl_get_error_string().str);
+    rcl_reset_error();
+    rcljava_throw_rclexception(env, ret, msg);
+    return;
+  }
+  ret = rcl_init(0, nullptr, &init_options, &context);
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to init: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();
@@ -63,7 +75,7 @@ Java_org_ros2_rcljava_RCLJava_nativeCreateNodeHandle(
   *node = rcl_get_zero_initialized_node();
 
   rcl_node_options_t default_options = rcl_node_get_default_options();
-  rcl_ret_t ret = rcl_node_init(node, node_name.c_str(), namespace_.c_str(), &default_options);
+  rcl_ret_t ret = rcl_node_init(node, node_name.c_str(), namespace_.c_str(), &context, &default_options);
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to create node: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();
@@ -85,13 +97,14 @@ Java_org_ros2_rcljava_RCLJava_nativeGetRMWIdentifier(JNIEnv * env, jclass)
 JNIEXPORT jboolean JNICALL
 Java_org_ros2_rcljava_RCLJava_nativeOk(JNIEnv *, jclass)
 {
-  return rcl_ok();
+//  return rcl_ok();
+  return true;
 }
 
 JNIEXPORT void JNICALL
 Java_org_ros2_rcljava_RCLJava_nativeShutdown(JNIEnv * env, jclass)
 {
-  rcl_ret_t ret = rcl_shutdown();
+  rcl_ret_t ret = rcl_shutdown(&context);
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to shutdown: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();

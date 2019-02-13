@@ -31,6 +31,8 @@
 
 using rcljava_common::exceptions::rcljava_throw_rclexception;
 
+extern rcl_context_t context;
+
 JNIEXPORT jlong JNICALL
 Java_org_ros2_rcljava_node_NodeImpl_nativeCreatePublisherHandle(
   JNIEnv * env, jclass, jlong node_handle, jclass jmessage_class, jstring jtopic,
@@ -219,8 +221,18 @@ Java_org_ros2_rcljava_node_NodeImpl_nativeCreateTimerHandle(
 {
   rcl_timer_t * timer = static_cast<rcl_timer_t *>(malloc(sizeof(rcl_timer_t)));
   *timer = rcl_get_zero_initialized_timer();
+  
+  rcl_clock_t clock;
+  rcl_allocator_t allocator = rcl_get_default_allocator();
+  rcl_ret_t ret = rcl_clock_init(RCL_STEADY_TIME, &clock, &allocator);
+  if (ret != RCL_RET_OK) {
+    std::string msg = "Failed to create clock: " + std::string(rcl_get_error_string().str);
+    rcl_reset_error();
+    rcljava_throw_rclexception(env, ret, msg);
+    return 0;
+  }
 
-  rcl_ret_t ret = rcl_timer_init(timer, timer_period, NULL, rcl_get_default_allocator());
+  ret = rcl_timer_init(timer, &clock, &context, timer_period, NULL, rcl_get_default_allocator());
 
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to create timer: " + std::string(rcl_get_error_string().str);
