@@ -10,7 +10,23 @@ This instrction is prepared for Ubuntu Xenial 16.04. In case you want to build f
 
 WORK IN PROGRESS
 
-Step1. Setup locale
+TLDR
+----
+
+You can install using all the steps below using following script
+
+```
+wget https://raw.githubusercontent.com/wmlynar/ros2_java/master/install_ros2_java.repos
+chmod +x install_ros2_java.repos
+./install_ros2_java.repos
+```
+
+Step 0. Prequisities
+--------------------
+
+Make sure that you run the build command in a fresh environment. You may want to make sure that you do not have source /opt/ros/${ROS_DISTRO}/setup.bash in your .bashrc.
+
+Step 1. Setup locale
 --------------------------------
 
 This step is based on https://index.ros.org/doc/ros2/Installation/Linux-Development-Setup/
@@ -22,7 +38,7 @@ echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-Step2. Install ROS2 dependencies
+Step 2. Install ROS2 dependencies
 --------------------------------
 
 This step is based on https://index.ros.org/doc/ros2/Installation/Linux-Development-Setup/
