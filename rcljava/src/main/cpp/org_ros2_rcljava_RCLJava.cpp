@@ -35,34 +35,36 @@ using rcljava_common::signatures::convert_from_java_signature;
 using rcljava_common::signatures::convert_to_java_signature;
 using rcljava_common::signatures::destroy_ros_message_signature;
 
-//TODO(wmlynar): let init return the context instead of making it global
-rcl_context_t context;
-
-JNIEXPORT void JNICALL
+JNIEXPORT jlong JNICALL
 Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass)
 {
   // TODO(esteve): parse args
-  context = rcl_get_zero_initialized_context();
+  rcl_context_t * context_ptr = new rcl_context_t;
+  *context_ptr = rcl_get_zero_initialized_context();
   rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
   rcl_ret_t ret = rcl_init_options_init(&init_options, rcl_get_default_allocator());  
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to init: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();
     rcljava_throw_rclexception(env, ret, msg);
-    return;
+    return 0;
   }
-  ret = rcl_init(0, nullptr, &init_options, &context);
+  ret = rcl_init(0, nullptr, &init_options, context_ptr);
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to init: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();
     rcljava_throw_rclexception(env, ret, msg);
+    return 0;
   }
+  return reinterpret_cast<jlong>(context_ptr);
 }
 
 JNIEXPORT jlong JNICALL
 Java_org_ros2_rcljava_RCLJava_nativeCreateNodeHandle(
-  JNIEnv * env, jclass, jstring jnode_name, jstring jnamespace)
+  JNIEnv * env, jclass, jstring jnode_name, jstring jnamespace, jlong context)
 {
+  rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(context);
+
   const char * node_name_tmp = env->GetStringUTFChars(jnode_name, 0);
   std::string node_name(node_name_tmp);
   env->ReleaseStringUTFChars(jnode_name, node_name_tmp);
@@ -75,7 +77,7 @@ Java_org_ros2_rcljava_RCLJava_nativeCreateNodeHandle(
   *node = rcl_get_zero_initialized_node();
 
   rcl_node_options_t default_options = rcl_node_get_default_options();
-  rcl_ret_t ret = rcl_node_init(node, node_name.c_str(), namespace_.c_str(), &context, &default_options);
+  rcl_ret_t ret = rcl_node_init(node, node_name.c_str(), namespace_.c_str(), context_ptr, &default_options);
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to create node: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();
@@ -102,13 +104,17 @@ Java_org_ros2_rcljava_RCLJava_nativeOk(JNIEnv *, jclass)
 }
 
 JNIEXPORT void JNICALL
-Java_org_ros2_rcljava_RCLJava_nativeShutdown(JNIEnv * env, jclass)
+Java_org_ros2_rcljava_RCLJava_nativeShutdown(JNIEnv * env, jclass, jlong context)
 {
-  rcl_ret_t ret = rcl_shutdown(&context);
+  rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(context);
+
+  rcl_ret_t ret = rcl_shutdown(context_ptr);
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to shutdown: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();
     rcljava_throw_rclexception(env, ret, msg);
+  } else {
+    delete context_ptr;
   }
 }
 

@@ -36,8 +36,6 @@ using rcljava_common::signatures::convert_from_java_signature;
 using rcljava_common::signatures::convert_to_java_signature;
 using rcljava_common::signatures::destroy_ros_message_signature;
 
-extern rcl_context_t context;
-
 jobject
 convert_rmw_request_id_to_java(JNIEnv * env, rmw_request_id_t * request_id)
 {

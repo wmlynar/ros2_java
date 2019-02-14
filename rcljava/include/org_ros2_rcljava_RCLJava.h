@@ -25,7 +25,7 @@ extern "C" {
  * Method:    nativeRCLJavaInit
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv *, jclass);
+JNIEXPORT jlong JNICALL Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv *, jclass);
 
 /*
  * Class:     org_ros2_rcljava_RCLJava
@@ -33,7 +33,7 @@ JNIEXPORT void JNICALL Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv *,
  * Signature: (Ljava/lang/String;Ljava/lang/String;)J
  */
 JNIEXPORT jlong JNICALL
-  Java_org_ros2_rcljava_RCLJava_nativeCreateNodeHandle(JNIEnv *, jclass, jstring, jstring);
+  Java_org_ros2_rcljava_RCLJava_nativeCreateNodeHandle(JNIEnv *, jclass, jstring, jstring, jlong context);
 
 /*
  * Class:     org_ros2_rcljava_RCLJava
@@ -54,7 +54,7 @@ JNIEXPORT jboolean JNICALL Java_org_ros2_rcljava_RCLJava_nativeOk(JNIEnv *, jcla
  * Method:    nativeShutdown
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_ros2_rcljava_RCLJava_nativeShutdown(JNIEnv *, jclass);
+JNIEXPORT void JNICALL Java_org_ros2_rcljava_RCLJava_nativeShutdown(JNIEnv *, jclass, jlong context);
 
 /*
  * Class:     org_ros2_rcljava_RCLJava

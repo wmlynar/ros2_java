@@ -120,7 +120,7 @@ public final class RCLJava {
    *   be loaded and accessible, enabling the creating of ROS2 entities
    *   (@{link Node}s, @{link Publisher}s and @{link Subscription}s.
    */
-  public static void rclJavaInit() {
+  public static long rclJavaInit() {
     synchronized (RCLJava.class) {
       if (!RCLJava.initialized) {
         try {
@@ -129,17 +129,19 @@ public final class RCLJava {
           logger.error("Native code library failed to load.\n" + ule);
           System.exit(1);
         }
-        RCLJava.nativeRCLJavaInit();
+        long context = RCLJava.nativeRCLJavaInit();
         logger.info("Using RMW implementation: {}", RCLJava.getRMWIdentifier());
         initialized = true;
+        return context;
       }
     }
+    return 0;
   }
 
   /**
    * Initialize the underlying rcl layer.
    */
-  private static native void nativeRCLJavaInit();
+  private static native long nativeRCLJavaInit();
 
   /**
    * Create a ROS2 node (rcl_node_t) and return a pointer to it as an integer.
@@ -148,7 +150,7 @@ public final class RCLJava {
    * @param namespace The namespace of the node.
    * @return A pointer to the underlying ROS2 node structure.
    */
-  private static native long nativeCreateNodeHandle(String nodeName, String namespace);
+  private static native long nativeCreateNodeHandle(String nodeName, String namespace, long context);
 
   /**
    * @return The identifier of the currently active RMW implementation via the
@@ -185,8 +187,8 @@ public final class RCLJava {
    * @return A @{link Node} that represents the underlying ROS2 node
    *     structure.
    */
-  public static Node createNode(final String nodeName) {
-    return createNode(nodeName, "");
+  public static Node createNode(final String nodeName, long context) {
+    return createNode(nodeName, "", context);
   }
 
   /**
@@ -197,8 +199,8 @@ public final class RCLJava {
    * @return A @{link Node} that represents the underlying ROS2 node
    *     structure.
    */
-  public static Node createNode(final String nodeName, final String namespace) {
-    long nodeHandle = nativeCreateNodeHandle(nodeName, namespace);
+  public static Node createNode(final String nodeName, final String namespace, long context) {
+    long nodeHandle = nativeCreateNodeHandle(nodeName, namespace, context);
     Node node = new NodeImpl(nodeHandle, nodeName);
     nodes.add(node);
     return node;
@@ -255,11 +257,11 @@ public final class RCLJava {
     getGlobalExecutor().removeNode(composableNode);
   }
 
-  private static native void nativeShutdown();
+  private static native void nativeShutdown(long context);
 
-  public static void shutdown() {
+  public static void shutdown(long context) {
     cleanup();
-    nativeShutdown();
+    nativeShutdown(context);
   }
 
   public static long convertQoSProfileToHandle(final QoSProfile qosProfile) {
