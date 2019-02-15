@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM ubuntu:xenial
 MAINTAINER esteve@apache.org
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
@@ -129,8 +129,7 @@ RUN cd ~/ros2_ws && vcs import src < ros2.repos
 
 RUN cd ~/ros2_ws && rosdep init
 RUN cd ~/ros2_ws && rosdep update
-RUN cd ~/ros2_ws && rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 rti-connext-dds-5.3.1 urdfdom_headers"
-
+RUN cd ~/ros2_ws && rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 python3-lark-parser rti-connext-dds-5.3.1 urdfdom_headers"
 
 # remove unneccesary packages
 RUN cd ~/ros2_ws && rm -rf src/ros2/demos
