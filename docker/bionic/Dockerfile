@@ -193,8 +193,6 @@ RUN cd ~/ros2_java_ws && perl -i -pe 'BEGIN{undef $/;} s/builtin_interfaces acti
 RUN cd ~/ros2_java_ws && wget https://raw.githubusercontent.com/wmlynar/ros2_java/master/ros2_java.repos
 RUN cd ~/ros2_java_ws && vcs import src < ros2_java.repos
 
-RUN . ~/ament_ws/install_isolated/local_setup.sh
-RUN cd ~/ros2_java_ws && ~/ament_ws/src/ament/ament_tools/scripts/ament.py build --symlink-install --isolated --parallel
-#RUN . ~/ament_ws/install/local_setup.sh
-#RUN cd ~/ros2_java_ws && colcon build --symlink-install
+RUN . ~/ament_ws/install_isolated/local_setup.sh && cd ~/ros2_java_ws && ~/ament_ws/src/ament/ament_tools/scripts/ament.py build --symlink-install --isolated --parallel
+#RUN . ~/ament_ws/install/local_setup.sh && cd ~/ros2_java_ws && colcon build --symlink-install
 

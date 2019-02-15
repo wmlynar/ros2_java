@@ -123,6 +123,7 @@ RUN mkdir -p /opt/gradle
 RUN cd ~ && unzip -d /opt/gradle gradle-3.5-bin.zip
 ENV PATH /opt/gradle/gradle-3.5/bin:${PATH}
 
+#install ros2
 RUN mkdir -p ~/ros2_ws/src
 RUN cd ~/ros2_ws && wget https://raw.githubusercontent.com/ros2/ros2/release-latest/ros2.repos
 RUN cd ~/ros2_ws && vcs import src < ros2.repos
@@ -147,9 +148,9 @@ RUN cd ~/ros2_ws && rm -rf src/ros2/ros2cli/ros2multicast
 # requires ros1
 RUN cd ~/ros2_ws && rm -rf src/ros2/ros1_bridge
 
-RUN apt-get -y install mc
-
 RUN cd ~/ros2_ws && colcon build --symlink-install --merge-install
+
+RUN apt-get -y install mc
 
 RUN mkdir -p ~/ament_ws/src
 RUN cd ~/ament_ws && wget https://raw.githubusercontent.com/esteve/ament_java/master/ament_java.repos
@@ -161,6 +162,10 @@ RUN cd ~/ament_ws && src/ament/ament_tools/scripts/ament.py build --symlink-inst
 RUN mkdir -p ~/ros2_java_ws/src
 RUN cd ~/ros2_java_ws && wget https://raw.githubusercontent.com/ros2/ros2/release-latest/ros2.repos
 RUN cd ~/ros2_java_ws && vcs import src < ros2.repos
+
+RUN cd ~/ros2_java_ws && rosdep init
+RUN cd ~/ros2_java_ws && rosdep update
+RUN cd ~/ros2_java_ws && rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 python3-lark-parser rti-connext-dds-5.3.1 urdfdom_headers"
 
 # remove unneccesary packages
 RUN cd ~/ros2_java_ws && rm -rf src/ros2/ament
@@ -192,8 +197,6 @@ RUN cd ~/ros2_java_ws && perl -i -pe 'BEGIN{undef $/;} s/builtin_interfaces acti
 RUN cd ~/ros2_java_ws && wget https://raw.githubusercontent.com/wmlynar/ros2_java/master/ros2_java.repos
 RUN cd ~/ros2_java_ws && vcs import src < ros2_java.repos
 
-RUN . ~/ament_ws/install_isolated/local_setup.sh
-RUN cd ~/ros2_java_ws && ~/ament_ws/src/ament/ament_tools/scripts/ament.py build --symlink-install --isolated --parallel
-#RUN . ~/ament_ws/install/local_setup.sh
-#RUN cd ~/ros2_java_ws && colcon build --symlink-install
+RUN . ~/ament_ws/install_isolated/local_setup.sh && cd ~/ros2_java_ws && ~/ament_ws/src/ament/ament_tools/scripts/ament.py build --symlink-install --isolated --parallel
+#RUN . ~/ament_ws/install/local_setup.sh && cd ~/ros2_java_ws && colcon build --symlink-install
 
