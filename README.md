@@ -169,7 +169,7 @@ sudo apt-get install -y --no-install-recommends \
 And some additional dependencies
 
 ```
-sudo apt-get install liblog4cxx-dev
+sudo apt-get -y install liblog4cxx-dev
 ```
 
 Step 4. Downgrade gradle to version 3.5
