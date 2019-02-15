@@ -29,6 +29,9 @@ extern "C" {
 JNIEXPORT void JNICALL
   Java_org_ros2_rcljava_timer_WallTimerImpl_nativeDispose(JNIEnv *, jclass, jlong);
 
+JNIEXPORT void JNICALL
+  Java_org_ros2_rcljava_timer_WallTimerImpl_nativeDisposeClock(JNIEnv *, jclass, jlong);
+
 /*
  * Class:     org_ros2_rcljava_timer_WallTimerImpl
  * Method:    nativeIsReady

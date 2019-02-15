@@ -41,6 +41,8 @@ public class WallTimerImpl implements WallTimer {
   private final WeakReference<Node> nodeReference;
 
   private long handle;
+  
+  private long clockHandle;
 
   private final Callback callback;
 
@@ -63,9 +65,10 @@ public class WallTimerImpl implements WallTimer {
   private static native long nativeCallTimer(long handle);
 
   public WallTimerImpl(final WeakReference<Node> nodeReference, final long handle,
-      final Callback callback, final long timerPeriodNS) {
+      final long clockHandle, final Callback callback, final long timerPeriodNS) {
     this.nodeReference = nodeReference;
     this.handle = handle;
+    this.clockHandle = clockHandle;
     this.callback = callback;
     this.timerPeriodNS = timerPeriodNS;
   }
@@ -111,11 +114,15 @@ public class WallTimerImpl implements WallTimer {
 
   private static native void nativeDispose(long handle);
 
+  private static native void nativeDisposeClock(long handle);
+
   public void dispose() {
     Node node = this.nodeReference.get();
     if (node != null) {
       nativeDispose(this.handle);
+      nativeDisposeClock(this.clockHandle);
       this.handle = 0;
+      this.clockHandle = 0;
     }
   }
 

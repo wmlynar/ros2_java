@@ -96,6 +96,22 @@ Java_org_ros2_rcljava_timer_WallTimerImpl_nativeDispose(
 }
 
 JNIEXPORT void JNICALL
+Java_org_ros2_rcljava_timer_WallTimerImpl_nativeDisposeClock(
+  JNIEnv * env, jclass, jlong clock_handle)
+{
+  if (clock_handle == 0) {
+    // everything is ok, already destroyed
+    return;
+  }
+
+  rcl_clock_t * clock = reinterpret_cast<rcl_clock_t *>(clock_handle);
+
+  assert(clock != NULL);
+  
+  free(clock);
+}
+
+JNIEXPORT void JNICALL
 Java_org_ros2_rcljava_timer_WallTimerImpl_nativeReset(JNIEnv * env, jclass, jlong wall_timer_handle)
 {
   assert(wall_timer_handle != 0);

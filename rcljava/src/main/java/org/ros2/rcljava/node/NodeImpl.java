@@ -315,14 +315,17 @@ public class NodeImpl implements Node {
     return this.handle;
   }
 
-  private static native long nativeCreateTimerHandle(long timerPeriod, long context);
+  private static native long nativeCreateClockHandle();
+  
+  private static native long nativeCreateTimerHandle(long clockHandle, long timerPeriod, long context);
 
   public WallTimer createWallTimer(
       final long period, final TimeUnit unit, final Callback callback, long context) {
     long timerPeriodNS = TimeUnit.NANOSECONDS.convert(period, unit);
-    long timerHandle = nativeCreateTimerHandle(timerPeriodNS, context);
+    long clockHandle = nativeCreateClockHandle();
+    long timerHandle = nativeCreateTimerHandle(clockHandle, timerPeriodNS, context);
     WallTimer timer =
-        new WallTimerImpl(new WeakReference<Node>(this), timerHandle, callback, timerPeriodNS);
+        new WallTimerImpl(new WeakReference<Node>(this), timerHandle, clockHandle, callback, timerPeriodNS);
     this.timers.add(timer);
     return timer;
   }
