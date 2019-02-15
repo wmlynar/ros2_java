@@ -27,6 +27,8 @@ import org.ros2.rcljava.interfaces.MessageDefinition;
 import org.ros2.rcljava.interfaces.ServiceDefinition;
 import org.ros2.rcljava.parameters.ParameterType;
 import org.ros2.rcljava.parameters.ParameterVariant;
+import org.ros2.rcljava.parameters.ParameterEventCallback;
+import org.ros2.rcljava.parameters.ParameterNames;
 import org.ros2.rcljava.publisher.Publisher;
 import org.ros2.rcljava.publisher.PublisherImpl;
 import org.ros2.rcljava.service.RMWRequestId;
@@ -40,6 +42,8 @@ import org.ros2.rcljava.timer.WallTimerImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import rcl_interfaces.msg.ParameterEvent;
 
 import java.lang.ref.WeakReference;
 
@@ -457,5 +461,17 @@ public class NodeImpl implements Node {
       }
       return result;
     }
+  }
+  
+  public Subscription<ParameterEvent> onParameterEvent(final ParameterEventCallback parameterConsumer) {
+    return createSubscription(
+        ParameterEvent.class, ParameterNames.PARAMETER_EVENTS,
+		new Consumer<ParameterEvent>() {
+			@Override
+			public void accept(ParameterEvent msg) {
+				parameterConsumer.onEvent(msg);
+			}
+	    },
+        QoSProfile.PARAMETER_EVENTS);
   }
 }

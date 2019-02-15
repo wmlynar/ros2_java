@@ -22,6 +22,7 @@ public class ParameterNames {
   public static final String LIST_PARAMETERS = "list_parameters";
   public static final String SET_PARAMETERS = "set_parameters";
   public static final String SET_PARAMETERS_ATOMICALLY = "set_parameters_atomically";
+  public static final String PARAMETER_EVENTS = "parameter_events";
 
   private ParameterNames() {}
 }

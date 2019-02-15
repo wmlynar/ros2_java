@@ -134,6 +134,7 @@ set(${PROJECT_NAME}_sources
   "src/main/java/org/ros2/rcljava/parameters/client/AsyncParametersClientImpl.java"
   "src/main/java/org/ros2/rcljava/parameters/client/SyncParametersClient.java"
   "src/main/java/org/ros2/rcljava/parameters/client/SyncParametersClientImpl.java"
+  "src/main/java/org/ros2/rcljava/parameters/ParameterEventCallback.java"
   "src/main/java/org/ros2/rcljava/parameters/ParameterNames.java"
   "src/main/java/org/ros2/rcljava/parameters/ParameterType.java"
   "src/main/java/org/ros2/rcljava/parameters/ParameterVariant.java"
