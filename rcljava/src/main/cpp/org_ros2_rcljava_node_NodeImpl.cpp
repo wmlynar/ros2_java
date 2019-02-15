@@ -221,10 +221,12 @@ Java_org_ros2_rcljava_node_NodeImpl_nativeCreateTimerHandle(
 
   rcl_timer_t * timer = static_cast<rcl_timer_t *>(malloc(sizeof(rcl_timer_t)));
   *timer = rcl_get_zero_initialized_timer();
+
+  //FIXME(wmlynar): memory leak!!! clock is never deleted
   
-  rcl_clock_t clock;
   rcl_allocator_t allocator = rcl_get_default_allocator();
-  rcl_ret_t ret = rcl_clock_init(RCL_STEADY_TIME, &clock, &allocator);
+  rcl_clock_t * clock = static_cast<rcl_clock_t *>(malloc(sizeof(rcl_clock_t)));
+  rcl_ret_t ret = rcl_clock_init(RCL_ROS_TIME, clock, &allocator);
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to create clock: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();
@@ -232,7 +234,7 @@ Java_org_ros2_rcljava_node_NodeImpl_nativeCreateTimerHandle(
     return 0;
   }
 
-  ret = rcl_timer_init(timer, &clock, context_ptr, timer_period, NULL, rcl_get_default_allocator());
+  ret = rcl_timer_init(timer, clock, context_ptr, timer_period, NULL, rcl_get_default_allocator());
 
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to create timer: " + std::string(rcl_get_error_string().str);
