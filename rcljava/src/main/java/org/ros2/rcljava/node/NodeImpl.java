@@ -366,12 +366,10 @@ public class NodeImpl implements Node {
     synchronized (mutex) {
       List<ParameterType> results = new ArrayList<ParameterType>();
       for (String name : names) {
-        for (Map.Entry<String, ParameterVariant> entry : this.parameters.entrySet()) {
-          if (name.equals(entry.getKey())) {
-            results.add(entry.getValue().getType());
-          } else {
-            results.add(ParameterType.fromByte(rcl_interfaces.msg.ParameterType.PARAMETER_NOT_SET));
-          }
+        if (this.parameters.containsKey(name)) {
+          results.add(parameters.get(name).getType());
+        } else {
+          results.add(ParameterType.fromByte(rcl_interfaces.msg.ParameterType.PARAMETER_NOT_SET));
         }
       }
       return results;
@@ -464,14 +462,11 @@ public class NodeImpl implements Node {
   }
   
   public Subscription<ParameterEvent> onParameterEvent(final ParameterEventCallback parameterConsumer) {
-    return createSubscription(
-        ParameterEvent.class, ParameterNames.PARAMETER_EVENTS,
-		new Consumer<ParameterEvent>() {
-			@Override
-			public void accept(ParameterEvent msg) {
-				parameterConsumer.onEvent(msg);
-			}
-	    },
-        QoSProfile.PARAMETER_EVENTS);
+    return createSubscription(ParameterEvent.class, ParameterNames.PARAMETER_EVENTS, new Consumer<ParameterEvent>() {
+      @Override
+      public void accept(ParameterEvent msg) {
+        parameterConsumer.onEvent(msg);
+      }
+    }, QoSProfile.PARAMETER_EVENTS);
   }
 }
