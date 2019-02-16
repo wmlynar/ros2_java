@@ -84,9 +84,9 @@ Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass, jobjectArr
 
 JNIEXPORT jlong JNICALL
 Java_org_ros2_rcljava_RCLJava_nativeCreateNodeHandle(
-  JNIEnv * env, jclass, jstring jnode_name, jstring jnamespace, jlong context)
+  JNIEnv * env, jclass, jstring jnode_name, jstring jnamespace, jlong contextHandle)
 {
-  rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(context);
+  rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(contextHandle);
 
   const char * node_name_tmp = env->GetStringUTFChars(jnode_name, 0);
   std::string node_name(node_name_tmp);
@@ -127,9 +127,9 @@ Java_org_ros2_rcljava_RCLJava_nativeOk(JNIEnv *, jclass)
 }
 
 JNIEXPORT void JNICALL
-Java_org_ros2_rcljava_RCLJava_nativeShutdown(JNIEnv * env, jclass, jlong context)
+Java_org_ros2_rcljava_RCLJava_nativeShutdown(JNIEnv * env, jclass, jlong contextHandle)
 {
-  rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(context);
+  rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(contextHandle);
 
   rcl_ret_t ret = rcl_shutdown(context_ptr);
   if (ret != RCL_RET_OK) {

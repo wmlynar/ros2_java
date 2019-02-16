@@ -125,7 +125,7 @@ public interface Node extends Disposable {
   <T extends ServiceDefinition> Client<T> createClient(final Class<T> serviceType,
       final String serviceName) throws NoSuchFieldException, IllegalAccessException;
 
-  WallTimer createWallTimer(final long period, final TimeUnit unit, ClockType clockType, final Callback callback, long context);
+  WallTimer createWallTimer(final long period, final TimeUnit unit, ClockType clockType, final Callback callback, long contextHandle);
 
   String getName();
 

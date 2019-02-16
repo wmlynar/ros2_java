@@ -129,10 +129,10 @@ public final class RCLJava {
           logger.error("Native code library failed to load.\n" + ule);
           System.exit(1);
         }
-        long context = RCLJava.nativeRCLJavaInit(args);
+        long contextHandle = RCLJava.nativeRCLJavaInit(args);
         logger.info("Using RMW implementation: {}", RCLJava.getRMWIdentifier());
         initialized = true;
-        return context;
+        return contextHandle;
       }
     }
     return 0;
@@ -150,7 +150,7 @@ public final class RCLJava {
    * @param namespace The namespace of the node.
    * @return A pointer to the underlying ROS2 node structure.
    */
-  private static native long nativeCreateNodeHandle(String nodeName, String namespace, long context);
+  private static native long nativeCreateNodeHandle(String nodeName, String namespace, long contextHandle);
 
   /**
    * @return The identifier of the currently active RMW implementation via the
@@ -187,8 +187,8 @@ public final class RCLJava {
    * @return A @{link Node} that represents the underlying ROS2 node
    *     structure.
    */
-  public static Node createNode(final String nodeName, long context) {
-    return createNode(nodeName, "", context);
+  public static Node createNode(final String nodeName, long contextHandle) {
+    return createNode(nodeName, "", contextHandle);
   }
 
   /**
@@ -199,8 +199,8 @@ public final class RCLJava {
    * @return A @{link Node} that represents the underlying ROS2 node
    *     structure.
    */
-  public static Node createNode(final String nodeName, final String namespace, long context) {
-    long nodeHandle = nativeCreateNodeHandle(nodeName, namespace, context);
+  public static Node createNode(final String nodeName, final String namespace, long contextHandle) {
+    long nodeHandle = nativeCreateNodeHandle(nodeName, namespace, contextHandle);
     Node node = new NodeImpl(nodeHandle, nodeName);
     nodes.add(node);
     return node;
@@ -257,11 +257,11 @@ public final class RCLJava {
     getGlobalExecutor().removeNode(composableNode);
   }
 
-  private static native void nativeShutdown(long context);
+  private static native void nativeShutdown(long contextHandle);
 
-  public static void shutdown(long context) {
+  public static void shutdown(long contextHandle) {
     cleanup();
-    nativeShutdown(context);
+    nativeShutdown(contextHandle);
   }
 
   public static long convertQoSProfileToHandle(final QoSProfile qosProfile) {

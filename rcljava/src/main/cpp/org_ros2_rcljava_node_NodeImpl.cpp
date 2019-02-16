@@ -235,10 +235,10 @@ Java_org_ros2_rcljava_node_NodeImpl_nativeCreateClockHandle(
 
 JNIEXPORT jlong JNICALL
 Java_org_ros2_rcljava_node_NodeImpl_nativeCreateTimerHandle(
-  JNIEnv * env, jclass, jlong clock, jlong timer_period, jlong context)
+  JNIEnv * env, jclass, jlong clock, jlong timer_period, jlong contextHandle)
 {
   rcl_clock_t * clock_ptr = reinterpret_cast<rcl_clock_t *>(clock);
-  rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(context);
+  rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(contextHandle);
 
   rcl_timer_t * timer = static_cast<rcl_timer_t *>(malloc(sizeof(rcl_timer_t)));
   *timer = rcl_get_zero_initialized_timer();

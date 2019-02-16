@@ -325,13 +325,13 @@ public class NodeImpl implements Node {
 
   private static native long nativeCreateClockHandle(int clockType);
   
-  private static native long nativeCreateTimerHandle(long clockHandle, long timerPeriod, long context);
+  private static native long nativeCreateTimerHandle(long clockHandle, long timerPeriod, long contextHandle);
 
   public WallTimer createWallTimer(
-      final long period, final TimeUnit unit, ClockType clockType, final Callback callback, long context) {
+      final long period, final TimeUnit unit, ClockType clockType, final Callback callback, long contextHandle) {
     long timerPeriodNS = TimeUnit.NANOSECONDS.convert(period, unit);
     long clockHandle = nativeCreateClockHandle(clockType.getValue());
-    long timerHandle = nativeCreateTimerHandle(clockHandle, timerPeriodNS, context);
+    long timerHandle = nativeCreateTimerHandle(clockHandle, timerPeriodNS, contextHandle);
     WallTimer timer =
         new WallTimerImpl(new WeakReference<Node>(this), timerHandle, clockHandle, callback, timerPeriodNS);
     this.timers.add(timer);
