@@ -87,7 +87,12 @@ public class ParameterServiceImpl implements ParameterService {
               rcl_interfaces.srv.SetParameters_Response response) {
             List<ParameterVariant> pvariants = new ArrayList<ParameterVariant>();
             for (rcl_interfaces.msg.Parameter p : request.getParameters()) {
-              pvariants.add(ParameterVariant.fromParameter(p));
+              if(p.getValue().getType() == rcl_interfaces.msg.ParameterType.PARAMETER_NOT_SET) {
+                // delete parameter
+                // TODO: add support for deletion of parameters
+              } else {
+                pvariants.add(ParameterVariant.fromParameter(p));
+              }
             }
             List<rcl_interfaces.msg.SetParametersResult> results = node.setParameters(pvariants);
             response.setResults(results);
