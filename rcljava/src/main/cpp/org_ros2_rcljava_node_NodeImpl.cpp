@@ -215,12 +215,14 @@ Java_org_ros2_rcljava_node_NodeImpl_nativeDispose(JNIEnv * env, jclass, jlong no
 
 JNIEXPORT jlong JNICALL
 Java_org_ros2_rcljava_node_NodeImpl_nativeCreateClockHandle(
-  JNIEnv * env, jclass)
+  JNIEnv * env, jclass, jint clockType)
 {
   rcl_clock_t * clock = static_cast<rcl_clock_t *>(malloc(sizeof(rcl_clock_t)));
   rcl_allocator_t allocator = rcl_get_default_allocator();
+
+  rcl_clock_type_t clock_type = (rcl_clock_type_t)clockType;
   
-  rcl_ret_t ret = rcl_clock_init(RCL_ROS_TIME, clock, &allocator);
+  rcl_ret_t ret = rcl_clock_init(clock_type, clock, &allocator);
   
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to create clock: " + std::string(rcl_get_error_string().str);

@@ -35,6 +35,7 @@ import org.ros2.rcljava.publisher.Publisher;
 import org.ros2.rcljava.service.RMWRequestId;
 import org.ros2.rcljava.service.Service;
 import org.ros2.rcljava.subscription.Subscription;
+import org.ros2.rcljava.time.ClockType;
 import org.ros2.rcljava.timer.Timer;
 import org.ros2.rcljava.timer.WallTimer;
 
@@ -124,7 +125,7 @@ public interface Node extends Disposable {
   <T extends ServiceDefinition> Client<T> createClient(final Class<T> serviceType,
       final String serviceName) throws NoSuchFieldException, IllegalAccessException;
 
-  WallTimer createWallTimer(final long period, final TimeUnit unit, final Callback callback, long context);
+  WallTimer createWallTimer(final long period, final TimeUnit unit, ClockType clockType, final Callback callback, long context);
 
   String getName();
 

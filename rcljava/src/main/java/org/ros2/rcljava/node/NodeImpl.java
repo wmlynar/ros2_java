@@ -37,6 +37,7 @@ import org.ros2.rcljava.service.Service;
 import org.ros2.rcljava.service.ServiceImpl;
 import org.ros2.rcljava.subscription.Subscription;
 import org.ros2.rcljava.subscription.SubscriptionImpl;
+import org.ros2.rcljava.time.ClockType;
 import org.ros2.rcljava.timer.Timer;
 import org.ros2.rcljava.timer.WallTimer;
 import org.ros2.rcljava.timer.WallTimerImpl;
@@ -322,14 +323,14 @@ public class NodeImpl implements Node {
     return this.handle;
   }
 
-  private static native long nativeCreateClockHandle();
+  private static native long nativeCreateClockHandle(int clockType);
   
   private static native long nativeCreateTimerHandle(long clockHandle, long timerPeriod, long context);
 
   public WallTimer createWallTimer(
-      final long period, final TimeUnit unit, final Callback callback, long context) {
+      final long period, final TimeUnit unit, ClockType clockType, final Callback callback, long context) {
     long timerPeriodNS = TimeUnit.NANOSECONDS.convert(period, unit);
-    long clockHandle = nativeCreateClockHandle();
+    long clockHandle = nativeCreateClockHandle(clockType.getValue());
     long timerHandle = nativeCreateTimerHandle(clockHandle, timerPeriodNS, context);
     WallTimer timer =
         new WallTimerImpl(new WeakReference<Node>(this), timerHandle, clockHandle, callback, timerPeriodNS);
