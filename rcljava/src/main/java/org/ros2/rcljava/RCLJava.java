@@ -120,7 +120,7 @@ public final class RCLJava {
    *   be loaded and accessible, enabling the creating of ROS2 entities
    *   (@{link Node}s, @{link Publisher}s and @{link Subscription}s.
    */
-  public static long rclJavaInit() {
+  public static long rclJavaInit(String... args) {
     synchronized (RCLJava.class) {
       if (!RCLJava.initialized) {
         try {
@@ -129,7 +129,7 @@ public final class RCLJava {
           logger.error("Native code library failed to load.\n" + ule);
           System.exit(1);
         }
-        long context = RCLJava.nativeRCLJavaInit();
+        long context = RCLJava.nativeRCLJavaInit(args);
         logger.info("Using RMW implementation: {}", RCLJava.getRMWIdentifier());
         initialized = true;
         return context;
@@ -141,7 +141,7 @@ public final class RCLJava {
   /**
    * Initialize the underlying rcl layer.
    */
-  private static native long nativeRCLJavaInit();
+  private static native long nativeRCLJavaInit(String... args);
 
   /**
    * Create a ROS2 node (rcl_node_t) and return a pointer to it as an integer.

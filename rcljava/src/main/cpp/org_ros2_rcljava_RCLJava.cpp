@@ -35,10 +35,33 @@ using rcljava_common::signatures::convert_from_java_signature;
 using rcljava_common::signatures::convert_to_java_signature;
 using rcljava_common::signatures::destroy_ros_message_signature;
 
-JNIEXPORT jlong JNICALL
-Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass)
+char ** JniStringArray2StringArray(JNIEnv * env, jobjectArray stringArray)
 {
-  // TODO(esteve): parse args
+  jsize stringCount = env->GetArrayLength(stringArray);
+  char ** strings = reinterpret_cast<char **>(malloc(sizeof(char *) * stringCount));
+
+  int i = 0;
+  for (i = 0; i < stringCount; ++i) {
+    jstring jniString = (jstring) env->GetObjectArrayElement(stringArray, i);
+    const char * TempString = env->GetStringUTFChars(jniString, NULL);
+    strings[i] = const_cast<char *>(TempString);
+    env->ReleaseStringUTFChars(jniString, TempString);
+  }
+
+  return strings;
+}
+
+JNIEXPORT jlong JNICALL
+Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass, jobjectArray arg)
+{
+  int argc = 0;
+  char ** argv = nullptr;
+  if (arg != NULL) {
+    argc = env->GetArrayLength(arg);
+    if( argc>0 ) {
+      argv = JniStringArray2StringArray(env, arg);
+    }
+  }
   rcl_context_t * context_ptr = new rcl_context_t;
   *context_ptr = rcl_get_zero_initialized_context();
   rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
@@ -49,7 +72,7 @@ Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass)
     rcljava_throw_rclexception(env, ret, msg);
     return 0;
   }
-  ret = rcl_init(0, nullptr, &init_options, context_ptr);
+  ret = rcl_init(argc, argv, &init_options, context_ptr);
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to init: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();

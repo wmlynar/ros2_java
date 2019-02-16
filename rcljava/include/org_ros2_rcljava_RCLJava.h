@@ -23,9 +23,9 @@ extern "C" {
 /*
  * Class:     org_ros2_rcljava_RCLJava
  * Method:    nativeRCLJavaInit
- * Signature: ()V
+ * Signature: ([Ljava/lang/String;)V
  */
-JNIEXPORT jlong JNICALL Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv *, jclass);
+JNIEXPORT jlong JNICALL Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv *, jclass, jobjectArray arg);
 
 /*
  * Class:     org_ros2_rcljava_RCLJava
