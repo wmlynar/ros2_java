@@ -194,4 +194,23 @@ public class ParameterVariant {
             "Unexpected type from ParameterVariant: " + parameter.getValue().getType());
     }
   }
+  
+  public String getValueAsString() {
+    switch (this.value.getType()) {
+    case rcl_interfaces.msg.ParameterType.PARAMETER_BOOL:
+      return Boolean.toString(this.value.getBoolValue());
+    case rcl_interfaces.msg.ParameterType.PARAMETER_INTEGER:
+      return Long.toString(this.value.getIntegerValue());
+    case rcl_interfaces.msg.ParameterType.PARAMETER_DOUBLE:
+      return Double.toString(this.value.getDoubleValue());
+    case rcl_interfaces.msg.ParameterType.PARAMETER_STRING:
+      return this.value.getStringValue();
+    case rcl_interfaces.msg.ParameterType.PARAMETER_BYTE_ARRAY:
+      return this.value.getByteArrayValue().toString();
+    case rcl_interfaces.msg.ParameterType.PARAMETER_NOT_SET:
+      throw new IllegalArgumentException("Type from ParameterValue is not set");
+    default:
+      throw new IllegalArgumentException("Unexpected type from ParameterVariant: " + this.value.getType());
+    }
+  }
 }
