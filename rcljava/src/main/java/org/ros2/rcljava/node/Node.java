@@ -29,6 +29,7 @@ import org.ros2.rcljava.interfaces.MessageDefinition;
 import org.ros2.rcljava.interfaces.ServiceDefinition;
 import org.ros2.rcljava.parameters.ParameterType;
 import org.ros2.rcljava.parameters.ParameterVariant;
+import org.ros2.rcljava.parameters.ParameterCallback;
 import org.ros2.rcljava.parameters.ParameterEventCallback;
 import org.ros2.rcljava.publisher.Publisher;
 import org.ros2.rcljava.service.RMWRequestId;
@@ -138,6 +139,8 @@ public interface Node extends Disposable {
   List<rcl_interfaces.msg.ParameterDescriptor> describeParameters(List<String> names);
 
   rcl_interfaces.msg.ListParametersResult listParameters(List<String> prefixes, long depth);
-  
+
+  void setParameterCallback(final ParameterCallback parameterCallback);
+
   Subscription<rcl_interfaces.msg.ParameterEvent> onParameterEvent(ParameterEventCallback parameterConsumer);
 }

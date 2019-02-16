@@ -27,8 +27,9 @@ import org.ros2.rcljava.interfaces.MessageDefinition;
 import org.ros2.rcljava.interfaces.ServiceDefinition;
 import org.ros2.rcljava.parameters.ParameterType;
 import org.ros2.rcljava.parameters.ParameterVariant;
-import org.ros2.rcljava.parameters.ParameterEventCallback;
 import org.ros2.rcljava.parameters.ParameterNames;
+import org.ros2.rcljava.parameters.ParameterCallback;
+import org.ros2.rcljava.parameters.ParameterEventCallback;
 import org.ros2.rcljava.publisher.Publisher;
 import org.ros2.rcljava.publisher.PublisherImpl;
 import org.ros2.rcljava.service.RMWRequestId;
@@ -109,6 +110,8 @@ public class NodeImpl implements Node {
   private Object mutex;
 
   private Map<String, ParameterVariant> parameters;
+  
+  private ParameterCallback parameterCallback;
 
   /**
    * Constructor.
@@ -392,10 +395,17 @@ public class NodeImpl implements Node {
       List<ParameterVariant> parameters) {
     synchronized (mutex) {
       rcl_interfaces.msg.SetParametersResult result = new rcl_interfaces.msg.SetParametersResult();
-      for (ParameterVariant p : parameters) {
-        this.parameters.put(p.getName(), p);
+      if (this.parameterCallback != null) {
+        result = this.parameterCallback.onParamChange(parameters);
+      } else {
+        result.setSuccessful(true);
       }
-      result.setSuccessful(true);
+      if (result.getSuccessful()){
+        for (ParameterVariant p : parameters) {
+          this.parameters.put(p.getName(), p);
+        }
+        result.setSuccessful(true);
+      }
       return result;
     }
   }
@@ -461,6 +471,10 @@ public class NodeImpl implements Node {
     }
   }
   
+  public void setParameterCallback(final ParameterCallback parameterCallback) {
+    this.parameterCallback = parameterCallback;
+  }
+
   public Subscription<ParameterEvent> onParameterEvent(final ParameterEventCallback parameterConsumer) {
     return createSubscription(ParameterEvent.class, ParameterNames.PARAMETER_EVENTS, new Consumer<ParameterEvent>() {
       @Override
