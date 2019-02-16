@@ -471,7 +471,7 @@ public class NodeImpl implements Node {
     }
   }
   
-  public void setParameterCallback(final ParameterCallback parameterCallback) {
+  public void setParameterChangeCallback(final ParameterCallback parameterCallback) {
     this.parameterCallback = parameterCallback;
   }
 

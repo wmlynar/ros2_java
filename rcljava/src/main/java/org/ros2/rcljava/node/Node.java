@@ -140,7 +140,7 @@ public interface Node extends Disposable {
 
   rcl_interfaces.msg.ListParametersResult listParameters(List<String> prefixes, long depth);
 
-  void setParameterCallback(final ParameterCallback parameterCallback);
+  void setParameterChangeCallback(final ParameterCallback parameterCallback);
 
   Subscription<rcl_interfaces.msg.ParameterEvent> onParameterEvent(ParameterEventCallback parameterConsumer);
 }
