@@ -3,44 +3,8 @@
 sudo locale-gen en_US en_US.UTF-8
 sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
-source ~/.bashrc
+export LANG=en_US.UTF-8
 
-sudo apt update && sudo apt install -y \
-  build-essential \
-  cmake \
-  git \
-  python3-colcon-common-extensions \
-  python3-pip \
-  python-rosdep \
-  python3-vcstool \
-  wget
-# install some pip packages needed for testing
-python3 -m pip install -U \
-  argcomplete \
-  flake8 \
-  flake8-blind-except \
-  flake8-builtins \
-  flake8-class-newline \
-  flake8-comprehensions \
-  flake8-deprecated \
-  flake8-docstrings \
-  flake8-import-order \
-  flake8-quotes \
-  git+https://github.com/lark-parser/lark.git@0.7d \
-  pytest-repeat \
-  pytest-rerunfailures \
-  pytest \
-  pytest-cov \
-  pytest-runner \
-  setuptools
-# install Fast-RTPS dependencies
-sudo apt install --no-install-recommends -y \
-  libasio-dev \
-  libtinyxml2-dev
-
-sudo apt-get update
-sudo apt-get install -y --no-install-recommends \
-    locales
 sudo apt-get install -y --no-install-recommends \
     apt-transport-https \
     dirmngr \
@@ -99,7 +63,8 @@ gradle -b /tmp/dummy.gradle
 
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> ~/.bashrc
 echo "export PATH=\$PATH:\${JAVA_HOME}/bin:\${JAVA_HOME}/jre/bin" >> ~/.bashrc
-source ~/.bashrc
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATH=\$PATH:\${JAVA_HOME}/bin:\${JAVA_HOME}/jre/bin
 
 sudo apt-get update
 sudo apt-get install -y --no-install-recommends \
@@ -119,14 +84,48 @@ sudo apt-get install -y --no-install-recommends \
     python3-pep8 \
     uncrustify
 
+sudo apt update && sudo apt install -y \
+  build-essential \
+  cmake \
+  git \
+  python3-colcon-common-extensions \
+  python3-pip \
+  python-rosdep \
+  python3-vcstool \
+  wget
+# install some pip packages needed for testing
+python3 -m pip install -U \
+  argcomplete \
+  flake8 \
+  flake8-blind-except \
+  flake8-builtins \
+  flake8-class-newline \
+  flake8-comprehensions \
+  flake8-deprecated \
+  flake8-docstrings \
+  flake8-import-order \
+  flake8-quotes \
+  git+https://github.com/lark-parser/lark.git@0.7d \
+  pytest-repeat \
+  pytest-rerunfailures \
+  pytest \
+  pytest-cov \
+  pytest-runner \
+  setuptools
+# install Fast-RTPS dependencies
+sudo apt install --no-install-recommends -y \
+  libasio-dev \
+  libtinyxml2-dev
+
 sudo apt-get install liblog4cxx-dev
+RUN apt-get -y install unzip
 
 sudo chown -R $(id -u):$(id -g) /opt
 wget https://services.gradle.org/distributions/gradle-3.5-bin.zip
 mkdir -p /opt/gradle
 unzip -d /opt/gradle gradle-3.5-bin.zip
 echo "export PATH=/opt/gradle/gradle-3.5/bin:\${PATH}" >> ~/.bashrc
-source ~/.bashrc
+export PATH=/opt/gradle/gradle-3.5/bin:\${PATH}
 
 mkdir -p ament_ws/src
 cd ament_ws
@@ -146,7 +145,7 @@ rosdep update
 rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 python3-lark-parser rti-connext-dds-5.3.1 urdfdom_headers"
 
 # remove unneccesary packages
-rm -rf src/ros2/ament
+rm -rf src/ament
 rm -rf src/ros2/demos
 rm -rf src/ros2/examples
 rm -rf src/ros2/rmw_connext
@@ -158,6 +157,9 @@ rm -rf src/ros-visualization
 
 # remove package with ament compilation problem
 rm -rf src/ros2/ros2cli/ros2multicast
+
+# requires ros1
+rm -rf src/ros2/ros1_bridge
 
 # package ros2/example_interfaces
 perl -i -pe 'BEGIN{undef $/;} s/find_package\(action_msgs REQUIRED\)//smg' src/ros2/example_interfaces/CMakeLists.txt
@@ -173,6 +175,5 @@ wget https://raw.githubusercontent.com/wmlynar/ros2_java/master/ros2_java.repos
 vcs import src < ros2_java.repos
 
 . ../ament_ws/install_isolated/local_setup.sh
-ament build --symlink-install --isolated
-
+ament build --symlink-install --isolated --parallel
 
