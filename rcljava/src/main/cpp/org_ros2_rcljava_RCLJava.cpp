@@ -67,6 +67,7 @@ Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass, jobjectArr
   rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
   rcl_ret_t ret = rcl_init_options_init(&init_options, rcl_get_default_allocator());  
   if (ret != RCL_RET_OK) {
+    delete context_ptr;
     std::string msg = "Failed to init: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();
     rcljava_throw_rclexception(env, ret, msg);
@@ -74,6 +75,7 @@ Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass, jobjectArr
   }
   ret = rcl_init(argc, argv, &init_options, context_ptr);
   if (ret != RCL_RET_OK) {
+    delete context_ptr;
     std::string msg = "Failed to init: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();
     rcljava_throw_rclexception(env, ret, msg);
@@ -120,10 +122,15 @@ Java_org_ros2_rcljava_RCLJava_nativeGetRMWIdentifier(JNIEnv * env, jclass)
 }
 
 JNIEXPORT jboolean JNICALL
-Java_org_ros2_rcljava_RCLJava_nativeOk(JNIEnv *, jclass)
+Java_org_ros2_rcljava_RCLJava_nativeOk(JNIEnv *, jclass, jlong contextHandle)
 {
-//  return rcl_ok();
-  return true;
+  if (contextHandle==0) {
+    return false;
+  }
+  
+  rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(contextHandle);
+  
+  return rcl_context_is_valid(context_ptr);
 }
 
 JNIEXPORT void JNICALL

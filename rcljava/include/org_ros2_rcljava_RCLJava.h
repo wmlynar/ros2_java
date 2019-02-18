@@ -47,7 +47,7 @@ JNIEXPORT jstring JNICALL Java_org_ros2_rcljava_RCLJava_nativeGetRMWIdentifier(J
  * Method:    nativeOk
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_ros2_rcljava_RCLJava_nativeOk(JNIEnv *, jclass);
+JNIEXPORT jboolean JNICALL Java_org_ros2_rcljava_RCLJava_nativeOk(JNIEnv *, jclass, jlong);
 
 /*
  * Class:     org_ros2_rcljava_RCLJava

@@ -53,16 +53,19 @@ public class ClientImpl<T extends ServiceDefinition> implements Client<T> {
 
   private final Class<MessageDefinition> requestType;
   private final Class<MessageDefinition> responseType;
+  
+  private long contextHandle;
 
   public ClientImpl(final WeakReference<Node> nodeReference, final long handle,
       final String serviceName, final Class<MessageDefinition> requestType,
-      final Class<MessageDefinition> responseType) {
+      final Class<MessageDefinition> responseType, long contextHandle) {
     this.nodeReference = nodeReference;
     this.handle = handle;
     this.serviceName = serviceName;
     this.requestType = requestType;
     this.responseType = responseType;
     this.pendingRequests = new HashMap<Long, Map.Entry<Consumer, RCLFuture>>();
+    this.contextHandle = contextHandle;
   }
 
   public final <U extends MessageDefinition, V extends MessageDefinition> Future<V>
@@ -78,7 +81,7 @@ public class ClientImpl<T extends ServiceDefinition> implements Client<T> {
       sequenceNumber++;
       nativeSendClientRequest(handle, sequenceNumber, request.getFromJavaConverterInstance(),
           request.getToJavaConverterInstance(), request.getDestructorInstance(), request);
-      RCLFuture<V> future = new RCLFuture<V>(this.nodeReference);
+      RCLFuture<V> future = new RCLFuture<V>(this.nodeReference, contextHandle);
 
       Map.Entry<Consumer, RCLFuture> entry =
           new AbstractMap.SimpleEntry<Consumer, RCLFuture>(callback, future);

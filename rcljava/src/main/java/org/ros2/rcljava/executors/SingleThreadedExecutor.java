@@ -42,8 +42,8 @@ public class SingleThreadedExecutor implements Executor {
     this.baseExecutor.spinSome();
   }
 
-  public void spin() {
-    while (RCLJava.ok()) {
+  public void spin(long contextHandle) {
+    while (RCLJava.ok(contextHandle)) {
       this.spinOnce();
     }
   }

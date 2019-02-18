@@ -55,51 +55,56 @@ public class SyncParametersClientImpl implements SyncParametersClient {
 
   public AsyncParametersClient asyncParametersClient;
 
+  private long contextHandle;
+
   public SyncParametersClientImpl(final Node node, final String remoteName,
-      final QoSProfile qosProfile) throws NoSuchFieldException, IllegalAccessException {
-    this.asyncParametersClient = new AsyncParametersClientImpl(node, remoteName, qosProfile);
+      final QoSProfile qosProfile, long contextHandle) throws NoSuchFieldException, IllegalAccessException {
+    this.asyncParametersClient = new AsyncParametersClientImpl(node, remoteName, qosProfile, contextHandle);
+    
+    this.contextHandle = contextHandle;
   }
 
-  public SyncParametersClientImpl(final Node node, final QoSProfile qosProfile)
+  public SyncParametersClientImpl(final Node node, final QoSProfile qosProfile, long contextHandle)
       throws NoSuchFieldException, IllegalAccessException {
-    this(node, "", qosProfile);
+    this(node, "", qosProfile, contextHandle);
   }
 
-  public SyncParametersClientImpl(final Node node, final String remoteName)
+  public SyncParametersClientImpl(final Node node, final String remoteName, long contextHandle)
       throws NoSuchFieldException, IllegalAccessException {
-    this(node, remoteName, QoSProfile.PARAMETERS);
+    this(node, remoteName, QoSProfile.PARAMETERS, contextHandle);
   }
 
-  public SyncParametersClientImpl(final Node node)
+  public SyncParametersClientImpl(final Node node, long contextHandle)
       throws NoSuchFieldException, IllegalAccessException {
-    this(node, "", QoSProfile.PARAMETERS);
+    this(node, "", QoSProfile.PARAMETERS, contextHandle);
   }
 
   public SyncParametersClientImpl(final Executor executor, final Node node, final String remoteName,
-      final QoSProfile qosProfile) throws NoSuchFieldException, IllegalAccessException {
+      final QoSProfile qosProfile, long contextHandle) throws NoSuchFieldException, IllegalAccessException {
     this.executor = executor;
-    this.asyncParametersClient = new AsyncParametersClientImpl(node, remoteName, qosProfile);
+    this.asyncParametersClient = new AsyncParametersClientImpl(node, remoteName, qosProfile, contextHandle);
   }
 
   public SyncParametersClientImpl(final Executor executor, final Node node,
-      final QoSProfile qosProfile) throws NoSuchFieldException, IllegalAccessException {
-    this(executor, node, "", qosProfile);
+      final QoSProfile qosProfile, long contextHandle) throws NoSuchFieldException, IllegalAccessException {
+    this(executor, node, "", qosProfile, contextHandle);
   }
 
-  public SyncParametersClientImpl(final Executor executor, final Node node, final String remoteName)
+  public SyncParametersClientImpl(final Executor executor, final Node node, final String remoteName,
+          long contextHandle)
       throws NoSuchFieldException, IllegalAccessException {
-    this(executor, node, remoteName, QoSProfile.PARAMETERS);
+    this(executor, node, remoteName, QoSProfile.PARAMETERS, contextHandle);
   }
 
-  public SyncParametersClientImpl(final Executor executor, final Node node)
+  public SyncParametersClientImpl(final Executor executor, final Node node, long contextHandle)
       throws NoSuchFieldException, IllegalAccessException {
-    this(executor, node, "", QoSProfile.PARAMETERS);
+    this(executor, node, "", QoSProfile.PARAMETERS, contextHandle);
   }
 
   public List<ParameterVariant> getParameters(final List<String> names)
       throws InterruptedException, ExecutionException {
     if (executor != null) {
-      RCLFuture<List<ParameterVariant>> future = new RCLFuture<List<ParameterVariant>>(executor);
+      RCLFuture<List<ParameterVariant>> future = new RCLFuture<List<ParameterVariant>>(executor, contextHandle);
       asyncParametersClient.getParameters(
           names, new ConsumerHelper<List<ParameterVariant>>(future));
       return future.get();
@@ -111,7 +116,7 @@ public class SyncParametersClientImpl implements SyncParametersClient {
   public List<ParameterType> getParameterTypes(final List<String> names)
       throws InterruptedException, ExecutionException {
     if (executor != null) {
-      RCLFuture<List<ParameterType>> future = new RCLFuture<List<ParameterType>>(executor);
+      RCLFuture<List<ParameterType>> future = new RCLFuture<List<ParameterType>>(executor, contextHandle);
       asyncParametersClient.getParameterTypes(
           names, new ConsumerHelper<List<ParameterType>>(future));
       return future.get();
@@ -124,7 +129,7 @@ public class SyncParametersClientImpl implements SyncParametersClient {
       final List<ParameterVariant> parameters) throws InterruptedException, ExecutionException {
     if (executor != null) {
       RCLFuture<List<rcl_interfaces.msg.SetParametersResult>> future =
-          new RCLFuture<List<rcl_interfaces.msg.SetParametersResult>>(executor);
+          new RCLFuture<List<rcl_interfaces.msg.SetParametersResult>>(executor, contextHandle);
       asyncParametersClient.setParameters(
           parameters, new ConsumerHelper<List<rcl_interfaces.msg.SetParametersResult>>(future));
       return future.get();
@@ -137,7 +142,7 @@ public class SyncParametersClientImpl implements SyncParametersClient {
       final List<ParameterVariant> parameters) throws InterruptedException, ExecutionException {
     if (executor != null) {
       RCLFuture<rcl_interfaces.msg.SetParametersResult> future =
-          new RCLFuture<rcl_interfaces.msg.SetParametersResult>(executor);
+          new RCLFuture<rcl_interfaces.msg.SetParametersResult>(executor, contextHandle);
       asyncParametersClient.setParametersAtomically(
           parameters, new ConsumerHelper<rcl_interfaces.msg.SetParametersResult>(future));
       return future.get();
@@ -150,7 +155,7 @@ public class SyncParametersClientImpl implements SyncParametersClient {
       final List<String> prefixes, long depth) throws InterruptedException, ExecutionException {
     if (executor != null) {
       RCLFuture<rcl_interfaces.msg.ListParametersResult> future =
-          new RCLFuture<rcl_interfaces.msg.ListParametersResult>(executor);
+          new RCLFuture<rcl_interfaces.msg.ListParametersResult>(executor, contextHandle);
       asyncParametersClient.listParameters(
           prefixes, depth, new ConsumerHelper<rcl_interfaces.msg.ListParametersResult>(future));
       return future.get();
@@ -163,7 +168,7 @@ public class SyncParametersClientImpl implements SyncParametersClient {
       throws InterruptedException, ExecutionException {
     if (executor != null) {
       RCLFuture<List<rcl_interfaces.msg.ParameterDescriptor>> future =
-          new RCLFuture<List<rcl_interfaces.msg.ParameterDescriptor>>(executor);
+          new RCLFuture<List<rcl_interfaces.msg.ParameterDescriptor>>(executor, contextHandle);
       asyncParametersClient.describeParameters(
           names, new ConsumerHelper<List<rcl_interfaces.msg.ParameterDescriptor>>(future));
       return future.get();

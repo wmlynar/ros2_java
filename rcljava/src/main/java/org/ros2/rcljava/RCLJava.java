@@ -171,13 +171,13 @@ public final class RCLJava {
    *
    * @return true if RCLJava hasn't been shut down, false otherwise.
    */
-  private static native boolean nativeOk();
+  private static native boolean nativeOk(long contextHandle);
 
   /**
    * @return true if RCLJava hasn't been shut down, false otherwise.
    */
-  public static boolean ok() {
-    return nativeOk();
+  public static boolean ok(long contextHandle) {
+    return nativeOk(contextHandle);
   }
 
   /**
@@ -201,25 +201,25 @@ public final class RCLJava {
    */
   public static Node createNode(final String nodeName, final String namespace, long contextHandle) {
     long nodeHandle = nativeCreateNodeHandle(nodeName, namespace, contextHandle);
-    Node node = new NodeImpl(nodeHandle, nodeName);
+    Node node = new NodeImpl(nodeHandle, nodeName, contextHandle);
     nodes.add(node);
     return node;
   }
 
-  public static void spin(final Node node) {
+  public static void spin(final Node node, long contextHandle) {
     ComposableNode composableNode = new ComposableNode() {
       public Node getNode() {
         return node;
       }
     };
     getGlobalExecutor().addNode(composableNode);
-    getGlobalExecutor().spin();
+    getGlobalExecutor().spin(contextHandle);
     getGlobalExecutor().removeNode(composableNode);
   }
 
-  public static void spin(final ComposableNode composableNode) {
+  public static void spin(final ComposableNode composableNode, long contextHandle) {
     getGlobalExecutor().addNode(composableNode);
-    getGlobalExecutor().spin();
+    getGlobalExecutor().spin(contextHandle);
     getGlobalExecutor().removeNode(composableNode);
   }
 

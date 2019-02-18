@@ -59,12 +59,12 @@ public class MultiThreadedExecutor implements Executor {
     this.baseExecutor.spinSome();
   }
 
-  public void spin() {
+  public void spin(final long contextHandle) {
     synchronized (mutex) {
       for (int i = 0; i < this.numberOfThreads; i++) {
         this.threadpool.execute(new Runnable() {
           public void run() {
-            MultiThreadedExecutor.this.run();
+            MultiThreadedExecutor.this.run(contextHandle);
           }
         });
       }
@@ -72,8 +72,8 @@ public class MultiThreadedExecutor implements Executor {
     this.threadpool.shutdown();
   }
 
-  private void run() {
-    while (RCLJava.ok()) {
+  private void run(long contextHandle) {
+    while (RCLJava.ok(contextHandle)) {
       synchronized (mutex) {
         this.spinOnce();
       }

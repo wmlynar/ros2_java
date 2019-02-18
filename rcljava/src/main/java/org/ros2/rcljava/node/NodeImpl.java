@@ -113,6 +113,8 @@ public class NodeImpl implements Node {
   private Map<String, ParameterVariant> parameters;
   
   private ParameterCallback parameterCallback;
+  
+  private long contextHandle;
 
   /**
    * Constructor.
@@ -120,7 +122,7 @@ public class NodeImpl implements Node {
    * @param handle A pointer to the underlying ROS2 node structure. Must not
    *     be zero.
    */
-  public NodeImpl(final long handle, final String name) {
+  public NodeImpl(final long handle, final String name, long contextHandle) {
     this.handle = handle;
     this.name = name;
     this.publishers = new LinkedBlockingQueue<Publisher>();
@@ -130,6 +132,7 @@ public class NodeImpl implements Node {
     this.timers = new LinkedBlockingQueue<Timer>();
     this.mutex = new Object();
     this.parameters = new ConcurrentHashMap<String, ParameterVariant>();
+    this.contextHandle = contextHandle;
   }
 
   /**
@@ -279,7 +282,7 @@ public class NodeImpl implements Node {
     RCLJava.disposeQoSProfile(qosProfileHandle);
 
     Client<T> client = new ClientImpl<T>(
-        new WeakReference<Node>(this), clientHandle, serviceName, requestType, responseType);
+        new WeakReference<Node>(this), clientHandle, serviceName, requestType, responseType, contextHandle);
     this.clients.add(client);
 
     return client;

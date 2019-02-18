@@ -30,20 +30,23 @@ public class RCLFuture<V> implements Future<V> {
   private boolean done = false;
   private V value = null;
   private Executor executor = null;
+  private long contextHandle;
 
-  public RCLFuture(final WeakReference<Node> nodeReference) {
+  public RCLFuture(final WeakReference<Node> nodeReference, long contextHandle) {
     this.nodeReference = nodeReference;
+    this.contextHandle = contextHandle;
   }
 
-  public RCLFuture(final Executor executor) {
+  public RCLFuture(final Executor executor, long contextHandle) {
     this.executor = executor;
+    this.contextHandle = contextHandle;
   }
 
   public final V get() throws InterruptedException, ExecutionException {
     if(this.value != null) {
       return this.value;
     }
-    while (RCLJava.ok() && !isDone()) {
+    while (RCLJava.ok(contextHandle) && !isDone()) {
       if (executor != null) {
         executor.spinOnce();
       } else {
@@ -71,7 +74,7 @@ public class RCLFuture<V> implements Future<V> {
       endTime += timeoutNS;
     }
 
-    while (RCLJava.ok()) {
+    while (RCLJava.ok(contextHandle)) {
       if (executor != null) {
         executor.spinOnce();
       } else {
