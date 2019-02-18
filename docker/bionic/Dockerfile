@@ -123,6 +123,7 @@ RUN mkdir -p /opt/gradle
 RUN cd ~ && unzip -d /opt/gradle gradle-3.5-bin.zip
 ENV PATH /opt/gradle/gradle-3.5/bin:${PATH}
 
+#install ros2
 #RUN mkdir -p ~/ros2_ws/src
 #RUN cd ~/ros2_ws && wget https://raw.githubusercontent.com/ros2/ros2/release-latest/ros2.repos
 #RUN cd ~/ros2_ws && vcs import src < ros2.repos
@@ -130,7 +131,7 @@ ENV PATH /opt/gradle/gradle-3.5/bin:${PATH}
 #RUN cd ~/ros2_ws && rosdep init
 #RUN cd ~/ros2_ws && rosdep update
 #RUN cd ~/ros2_ws && rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 rti-connext-dds-5.3.1 urdfdom_headers"
-
+#
 ## remove unneccesary packages
 #RUN cd ~/ros2_ws && rm -rf src/ros2/demos
 #RUN cd ~/ros2_ws && rm -rf src/ros2/examples
@@ -144,7 +145,7 @@ ENV PATH /opt/gradle/gradle-3.5/bin:${PATH}
 ## remove package with ament compilation problem
 #RUN cd ~/ros2_ws && rm -rf src/ros2/ros2cli/ros2multicast
 #
-# requires ros1
+## requires ros1
 #RUN cd ~/ros2_ws && rm -rf src/ros2/ros1_bridge
 #
 #RUN cd ~/ros2_ws && colcon build --symlink-install --merge-install
@@ -161,6 +162,10 @@ RUN cd ~/ament_ws && src/ament/ament_tools/scripts/ament.py build --symlink-inst
 RUN mkdir -p ~/ros2_java_ws/src
 RUN cd ~/ros2_java_ws && wget https://raw.githubusercontent.com/ros2/ros2/release-latest/ros2.repos
 RUN cd ~/ros2_java_ws && vcs import src < ros2.repos
+
+RUN cd ~/ros2_java_ws && rosdep init
+RUN cd ~/ros2_java_ws && rosdep update
+RUN cd ~/ros2_java_ws && rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 rti-connext-dds-5.3.1 urdfdom_headers"
 
 # remove unneccesary packages
 RUN cd ~/ros2_java_ws && rm -rf src/ament
