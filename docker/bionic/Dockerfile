@@ -200,3 +200,7 @@ RUN cd ~/ros2_java_ws && vcs import src < ros2_java.repos
 RUN . ~/ament_ws/install_isolated/local_setup.sh && cd ~/ros2_java_ws && ament build --symlink-install --isolated --parallel
 #RUN . ~/ament_ws/install/local_setup.sh && cd ~/ros2_java_ws && colcon build --symlink-install
 
+# install maven packages and compile
+RUN apt -y install maven
+RUN cd ~/ros2_java_ws/src/ros2_java && git clone https://github.com/wmlynar/ros2_java_maven
+RUN cd ~/ros2_java_ws/src/ros2_java/ros2_java_maven && mvn install

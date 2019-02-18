@@ -177,3 +177,10 @@ vcs import src < ros2_java.repos
 . ../ament_ws/install_isolated/local_setup.sh
 ament build --symlink-install --isolated --parallel
 
+# install maven packages and compile
+sudo apt -y install maven
+src/ros2_java
+git clone https://github.com/wmlynar/ros2_java_maven
+cd ros2_java_maven
+mvn install
+cd ../../..
