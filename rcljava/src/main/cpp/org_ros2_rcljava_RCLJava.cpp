@@ -157,7 +157,19 @@ Java_org_ros2_rcljava_RCLJava_nativeShutdown(JNIEnv * env, jclass, jlong context
 JNIEXPORT void JNICALL
 Java_org_ros2_rcljava_RCLJava_nativeDeleteContext(JNIEnv *, jclass, jlong contextHandle)
 {
+  if (contextHandle==0) {
+    return;
+  }
+
   rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(contextHandle);
+
+  rcl_ret_t ret = rcl_context_fini(context_ptr);
+  if (RCL_RET_OK != ret) {
+    std::string msg = "Failed to finalize context: " + std::string(rcl_get_error_string().str);
+    rcl_reset_error();
+    rcljava_throw_rclexception(env, ret, msg);
+  }
+
   delete context_ptr;
 }
 
