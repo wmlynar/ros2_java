@@ -52,8 +52,27 @@ char ** JniStringArray2StringArray(JNIEnv * env, jobjectArray stringArray)
 }
 
 JNIEXPORT jlong JNICALL
-Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass, jobjectArray arg)
+Java_org_ros2_rcljava_RCLJava_nativeCreateContext(JNIEnv *, jclass)
 {
+  rcl_context_t * context_ptr = new rcl_context_t;
+  *context_ptr = rcl_get_zero_initialized_context();
+  return reinterpret_cast<jlong>(context_ptr);
+}
+
+JNIEXPORT void JNICALL
+Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass, jlong contextHandle,
+    jobjectArray arg)
+{
+  rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(contextHandle);
+  
+  rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
+  rcl_ret_t ret = rcl_init_options_init(&init_options, rcl_get_default_allocator());  
+  if (ret != RCL_RET_OK) {
+    std::string msg = "Failed to create init options: " + std::string(rcl_get_error_string().str);
+    rcl_reset_error();
+    rcljava_throw_rclexception(env, ret, msg);
+  }
+  
   int argc = 0;
   char ** argv = nullptr;
   if (arg != NULL) {
@@ -62,27 +81,16 @@ Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass, jobjectArr
       argv = JniStringArray2StringArray(env, arg);
     }
   }
-  rcl_context_t * context_ptr = new rcl_context_t;
-  *context_ptr = rcl_get_zero_initialized_context();
-  rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
-  rcl_ret_t ret = rcl_init_options_init(&init_options, rcl_get_default_allocator());  
-  if (ret != RCL_RET_OK) {
-    delete context_ptr;
-    std::string msg = "Failed to init: " + std::string(rcl_get_error_string().str);
-    rcl_reset_error();
-    rcljava_throw_rclexception(env, ret, msg);
-    return 0;
-  }
+  
   ret = rcl_init(argc, argv, &init_options, context_ptr);
   if (ret != RCL_RET_OK) {
-    delete context_ptr;
     std::string msg = "Failed to init: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();
     rcljava_throw_rclexception(env, ret, msg);
-    return 0;
   }
-  return reinterpret_cast<jlong>(context_ptr);
 }
+
+
 
 JNIEXPORT jlong JNICALL
 Java_org_ros2_rcljava_RCLJava_nativeCreateNodeHandle(
@@ -143,9 +151,14 @@ Java_org_ros2_rcljava_RCLJava_nativeShutdown(JNIEnv * env, jclass, jlong context
     std::string msg = "Failed to shutdown: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();
     rcljava_throw_rclexception(env, ret, msg);
-  } else {
-    delete context_ptr;
   }
+}
+
+JNIEXPORT void JNICALL
+Java_org_ros2_rcljava_RCLJava_nativeDeleteContext(JNIEnv *, jclass, jlong contextHandle)
+{
+  rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(contextHandle);
+  delete context_ptr;
 }
 
 JNIEXPORT jlong JNICALL

@@ -129,7 +129,8 @@ public final class RCLJava {
           logger.error("Native code library failed to load.\n" + ule);
           System.exit(1);
         }
-        long contextHandle = RCLJava.nativeRCLJavaInit(args);
+        long contextHandle = nativeCreateContext();
+        RCLJava.nativeRCLJavaInit(contextHandle, args);
         logger.info("Using RMW implementation: {}", RCLJava.getRMWIdentifier());
         initialized = true;
         return contextHandle;
@@ -139,9 +140,14 @@ public final class RCLJava {
   }
 
   /**
+   * Create context.
+   */
+  private static native long nativeCreateContext();
+  
+  /**
    * Initialize the underlying rcl layer.
    */
-  private static native long nativeRCLJavaInit(String... args);
+  private static native void nativeRCLJavaInit(long context, String... args);
 
   /**
    * Create a ROS2 node (rcl_node_t) and return a pointer to it as an integer.
@@ -259,9 +265,12 @@ public final class RCLJava {
 
   private static native void nativeShutdown(long contextHandle);
 
+  private static native void nativeDeleteContext(long contextHandle);
+  
   public static void shutdown(long contextHandle) {
     cleanup();
     nativeShutdown(contextHandle);
+    nativeDeleteContext(contextHandle);
   }
 
   public static long convertQoSProfileToHandle(final QoSProfile qosProfile) {
