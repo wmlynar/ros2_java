@@ -120,7 +120,7 @@ public final class RCLJava {
    *   be loaded and accessible, enabling the creating of ROS2 entities
    *   (@{link Node}s, @{link Publisher}s and @{link Subscription}s.
    */
-  public static long rclJavaInit(String... args) {
+  public static long rclJavaInit(String[] args) {
     synchronized (RCLJava.class) {
       if (!RCLJava.initialized) {
         try {
@@ -130,7 +130,7 @@ public final class RCLJava {
           System.exit(1);
         }
         long contextHandle = nativeCreateContext();
-        RCLJava.nativeRCLJavaInit(contextHandle, args);
+        RCLJava.nativeRCLJavaInit(args, contextHandle);
         logger.info("Using RMW implementation: {}", RCLJava.getRMWIdentifier());
         initialized = true;
         return contextHandle;
@@ -147,7 +147,7 @@ public final class RCLJava {
   /**
    * Initialize the underlying rcl layer.
    */
-  private static native void nativeRCLJavaInit(long context, String... args);
+  private static native void nativeRCLJavaInit(String[] args, long context);
 
   /**
    * Create a ROS2 node (rcl_node_t) and return a pointer to it as an integer.
@@ -156,7 +156,8 @@ public final class RCLJava {
    * @param namespace The namespace of the node.
    * @return A pointer to the underlying ROS2 node structure.
    */
-  private static native long nativeCreateNodeHandle(String nodeName, String namespace, long contextHandle);
+  private static native long nativeCreateNodeHandle(String nodeName, String namespace,
+		  String[] args, boolean useGlobalArguments, long contextHandle);
 
   /**
    * @return The identifier of the currently active RMW implementation via the
@@ -193,8 +194,9 @@ public final class RCLJava {
    * @return A @{link Node} that represents the underlying ROS2 node
    *     structure.
    */
-  public static Node createNode(final String nodeName, long contextHandle) {
-    return createNode(nodeName, "", contextHandle);
+  public static Node createNode(final String nodeName, String[] args,
+		  boolean useGlobalArguments, long contextHandle) {
+    return createNode(nodeName, "", args, useGlobalArguments, contextHandle);
   }
 
   /**
@@ -205,8 +207,10 @@ public final class RCLJava {
    * @return A @{link Node} that represents the underlying ROS2 node
    *     structure.
    */
-  public static Node createNode(final String nodeName, final String namespace, long contextHandle) {
-    long nodeHandle = nativeCreateNodeHandle(nodeName, namespace, contextHandle);
+  public static Node createNode(final String nodeName, final String namespace, String[] args,
+		  boolean useGlobalArguments, long contextHandle) {
+    long nodeHandle = nativeCreateNodeHandle(nodeName, namespace, args,
+    		useGlobalArguments, contextHandle);
     Node node = new NodeImpl(nodeHandle, nodeName, contextHandle);
     nodes.add(node);
     return node;
@@ -265,12 +269,12 @@ public final class RCLJava {
 
   private static native void nativeShutdown(long contextHandle);
 
-  private static native void nativeDeleteContext(long contextHandle);
+  private static native void nativeDisposeContext(long contextHandle);
   
   public static void shutdown(long contextHandle) {
     cleanup();
     nativeShutdown(contextHandle);
-    nativeDeleteContext(contextHandle);
+    nativeDisposeContext(contextHandle);
   }
 
   public static long convertQoSProfileToHandle(final QoSProfile qosProfile) {

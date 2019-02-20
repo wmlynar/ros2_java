@@ -31,18 +31,18 @@ JNIEXPORT jlong JNICALL Java_org_ros2_rcljava_RCLJava_nativeCreateContext
 /*
  * Class:     org_ros2_rcljava_RCLJava
  * Method:    nativeRCLJavaInit
- * Signature: (J[Ljava/lang/String;)V
+ * Signature: ([Ljava/lang/String;J)V
  */
 JNIEXPORT void JNICALL Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit
-  (JNIEnv *, jclass, jlong, jobjectArray);
+  (JNIEnv *, jclass, jobjectArray, jlong);
 
 /*
  * Class:     org_ros2_rcljava_RCLJava
  * Method:    nativeCreateNodeHandle
- * Signature: (Ljava/lang/String;Ljava/lang/String;J)J
+ * Signature: (Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;ZJ)J
  */
 JNIEXPORT jlong JNICALL Java_org_ros2_rcljava_RCLJava_nativeCreateNodeHandle
-  (JNIEnv *, jclass, jstring, jstring, jlong);
+  (JNIEnv *, jclass, jstring, jstring, jobjectArray, jboolean, jlong);
 
 /*
  * Class:     org_ros2_rcljava_RCLJava
@@ -70,10 +70,10 @@ JNIEXPORT void JNICALL Java_org_ros2_rcljava_RCLJava_nativeShutdown
 
 /*
  * Class:     org_ros2_rcljava_RCLJava
- * Method:    nativeDeleteContext
+ * Method:    nativeDisposeContext
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_org_ros2_rcljava_RCLJava_nativeDeleteContext
+JNIEXPORT void JNICALL Java_org_ros2_rcljava_RCLJava_nativeDisposeContext
   (JNIEnv *, jclass, jlong);
 
 /*

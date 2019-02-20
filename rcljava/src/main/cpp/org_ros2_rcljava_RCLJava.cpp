@@ -60,8 +60,7 @@ Java_org_ros2_rcljava_RCLJava_nativeCreateContext(JNIEnv *, jclass)
 }
 
 JNIEXPORT void JNICALL
-Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass, jlong contextHandle,
-    jobjectArray arg)
+Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass, jobjectArray arg, jlong contextHandle)
 {
   rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(contextHandle);
   
@@ -94,7 +93,8 @@ Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass, jlong cont
 
 JNIEXPORT jlong JNICALL
 Java_org_ros2_rcljava_RCLJava_nativeCreateNodeHandle(
-  JNIEnv * env, jclass, jstring jnode_name, jstring jnamespace, jlong contextHandle)
+  JNIEnv * env, jclass, jstring jnode_name, jstring jnamespace, jobjectArray args, jboolean useGlobalArguments,
+    jlong contextHandle)
 {
   rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(contextHandle);
 
@@ -155,7 +155,7 @@ Java_org_ros2_rcljava_RCLJava_nativeShutdown(JNIEnv * env, jclass, jlong context
 }
 
 JNIEXPORT void JNICALL
-Java_org_ros2_rcljava_RCLJava_nativeDeleteContext(JNIEnv *, jclass, jlong contextHandle)
+Java_org_ros2_rcljava_RCLJava_nativeDisposeContext(JNIEnv * env, jclass, jlong contextHandle)
 {
   if (contextHandle==0) {
     return;
