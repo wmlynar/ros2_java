@@ -17,6 +17,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <string>
+#include <climits>
 
 #include "rcl/error_handling.h"
 #include "rcl/node.h"
@@ -93,7 +94,7 @@ Java_org_ros2_rcljava_RCLJava_nativeRCLJavaInit(JNIEnv * env, jclass, jobjectArr
 
 JNIEXPORT jlong JNICALL
 Java_org_ros2_rcljava_RCLJava_nativeCreateNodeHandle(
-  JNIEnv * env, jclass, jstring jnode_name, jstring jnamespace, jobjectArray args, jboolean useGlobalArguments,
+  JNIEnv * env, jclass, jstring jnode_name, jstring jnamespace, jobjectArray arg, jboolean use_global_arguments,
     jlong contextHandle)
 {
   rcl_context_t * context_ptr = reinterpret_cast<rcl_context_t *>(contextHandle);
@@ -109,8 +110,59 @@ Java_org_ros2_rcljava_RCLJava_nativeCreateNodeHandle(
   rcl_node_t * node = static_cast<rcl_node_t *>(malloc(sizeof(rcl_node_t)));
   *node = rcl_get_zero_initialized_node();
 
-  rcl_node_options_t default_options = rcl_node_get_default_options();
-  rcl_ret_t ret = rcl_node_init(node, node_name.c_str(), namespace_.c_str(), context_ptr, &default_options);
+  // Determine the domain id based on the options and the ROS_DOMAIN_ID env variable.
+  size_t domain_id = 0;
+  char * ros_domain_id = nullptr;
+  const char * env_var = "ROS_DOMAIN_ID";
+#ifndef _WIN32
+  ros_domain_id = getenv(env_var);
+#else
+  size_t ros_domain_id_size;
+  _dupenv_s(&ros_domain_id, &ros_domain_id_size, env_var);
+#endif
+  if (ros_domain_id) {
+    uint32_t number = strtoul(ros_domain_id, NULL, 0);
+    if (number == (uint32_t)ULONG_MAX) {
+#ifdef _WIN32
+      // free the ros_domain_id before throwing, if getenv was used on Windows
+      free(ros_domain_id);
+#endif
+      std::string msg = "Failed to interpret ROS_DOMAIN_ID as integral number";
+      rcl_reset_error();
+      rcljava_throw_rclexception(env, 0, msg);
+      return 0;
+    }
+    domain_id = static_cast<size_t>(number);
+#ifdef _WIN32
+    free(ros_domain_id);
+#endif
+  }
+
+  rcl_node_options_t options = rcl_node_get_default_options();
+  int argc = 0;
+  char ** argv = nullptr;
+  if (arg != NULL) {
+    argc = env->GetArrayLength(arg);
+    if( argc>0 ) {
+      argv = JniStringArray2StringArray(env, arg);
+    }
+  }
+  
+  rcl_ret_t ret = rcl_parse_arguments(
+    static_cast<int>(argc), argv, rcl_get_default_allocator(),
+    &(options.arguments));
+  if (RCL_RET_OK != ret) {
+    std::string msg = "Failed to parse arguments";
+    rcl_reset_error();
+    rcljava_throw_rclexception(env, ret, msg);
+    return 0;
+  }
+
+  options.use_global_arguments = use_global_arguments;
+  // TODO(wjwwood): pass the Allocator to the options
+  options.domain_id = domain_id;
+
+  ret = rcl_node_init(node, node_name.c_str(), namespace_.c_str(), context_ptr, &options);
   if (ret != RCL_RET_OK) {
     std::string msg = "Failed to create node: " + std::string(rcl_get_error_string().str);
     rcl_reset_error();
