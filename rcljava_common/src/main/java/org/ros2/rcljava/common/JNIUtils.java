@@ -17,11 +17,14 @@ package org.ros2.rcljava.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.function.Consumer;
 
 public final class JNIUtils {
   private static final Logger logger = LoggerFactory.getLogger(JNIUtils.class);
 
   private static final String TYPESUPPORT = "rosidl_typesupport_c";
+  
+  private static Consumer<String> libraryLoader; 
 
   /**
    * Private constructor so this cannot be instantiated.
@@ -44,13 +47,25 @@ public final class JNIUtils {
     String libraryName = normalizeClassName(cls);
     libraryName = libraryName + "__jni";
     logger.info("Loading implementation: " + libraryName);
-    System.loadLibrary(libraryName);
+    if (libraryLoader == null) {
+      System.loadLibrary(libraryName);
+    } else {
+      libraryLoader.accept(libraryName);
+    }
   }
 
   public static void loadTypesupport(Class cls) {
     String libraryName = normalizeClassName(cls);
     libraryName = libraryName + "__jni__" + JNIUtils.TYPESUPPORT;
     logger.info("Loading typesupport: " + libraryName);
-    System.loadLibrary(libraryName);
+    if (libraryLoader == null) {
+      System.loadLibrary(libraryName);
+    } else {
+      libraryLoader.accept(libraryName);
+    }
+  }
+  
+  public static void setLibraryLoader(Consumer<String> libraryLoader) {
+    JNIUtils.libraryLoader = libraryLoader;
   }
 }
