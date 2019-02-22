@@ -110,35 +110,8 @@ Java_org_ros2_rcljava_RCLJava_nativeCreateNodeHandle(
   rcl_node_t * node = static_cast<rcl_node_t *>(malloc(sizeof(rcl_node_t)));
   *node = rcl_get_zero_initialized_node();
 
-  // Determine the domain id based on the options and the ROS_DOMAIN_ID env variable.
-  size_t domain_id = 0;
-  char * ros_domain_id = nullptr;
-  const char * env_var = "ROS_DOMAIN_ID";
-#ifndef _WIN32
-  ros_domain_id = getenv(env_var);
-#else
-  size_t ros_domain_id_size;
-  _dupenv_s(&ros_domain_id, &ros_domain_id_size, env_var);
-#endif
-  if (ros_domain_id) {
-    uint32_t number = strtoul(ros_domain_id, NULL, 0);
-    if (number == (uint32_t)ULONG_MAX) {
-#ifdef _WIN32
-      // free the ros_domain_id before throwing, if getenv was used on Windows
-      free(ros_domain_id);
-#endif
-      std::string msg = "Failed to interpret ROS_DOMAIN_ID as integral number";
-      rcl_reset_error();
-      rcljava_throw_rclexception(env, 0, msg);
-      return 0;
-    }
-    domain_id = static_cast<size_t>(number);
-#ifdef _WIN32
-    free(ros_domain_id);
-#endif
-  }
-
   rcl_node_options_t options = rcl_node_get_default_options();
+  
   int argc = 0;
   char ** argv = nullptr;
   if (arg != NULL) {
@@ -159,8 +132,6 @@ Java_org_ros2_rcljava_RCLJava_nativeCreateNodeHandle(
   }
 
   options.use_global_arguments = use_global_arguments;
-  // TODO(wjwwood): pass the Allocator to the options
-  options.domain_id = domain_id;
 
   ret = rcl_node_init(node, node_name.c_str(), namespace_.c_str(), context_ptr, &options);
   if (ret != RCL_RET_OK) {
