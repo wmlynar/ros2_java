@@ -64,7 +64,7 @@ gradle -b /tmp/dummy.gradle
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> ~/.bashrc
 echo "export PATH=\$PATH:\${JAVA_HOME}/bin:\${JAVA_HOME}/jre/bin" >> ~/.bashrc
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-export PATH=\$PATH:\${JAVA_HOME}/bin:\${JAVA_HOME}/jre/bin
+export PATH=$PATH:${JAVA_HOME}/bin:${JAVA_HOME}/jre/bin
 
 sudo apt-get update
 sudo apt-get install -y --no-install-recommends \
@@ -125,7 +125,7 @@ wget https://services.gradle.org/distributions/gradle-3.5-bin.zip
 mkdir -p /opt/gradle
 unzip -d /opt/gradle gradle-3.5-bin.zip
 echo "export PATH=/opt/gradle/gradle-3.5/bin:\${PATH}" >> ~/.bashrc
-export PATH=/opt/gradle/gradle-3.5/bin:\${PATH}
+export PATH=/opt/gradle/gradle-3.5/bin:${PATH}
 
 mkdir -p ament_ws/src
 cd ament_ws
