@@ -203,4 +203,10 @@ RUN . ~/ament_ws/install_isolated/local_setup.sh && cd ~/ros2_java_ws && ament b
 # install maven packages and compile
 RUN apt -y install maven
 RUN cd ~/ros2_java_ws/src/ros2_java && git clone https://github.com/wmlynar/ros2_java_maven
-RUN cd ~/ros2_java_ws/src/ros2_java/ros2_java_maven && ./install.sh
+RUN cd ~/ros2_java_ws/src/ros2_java && git clone https://github.com/wmlynar/ros2_java_maven_example
+RUN cd ~/ros2_java_ws/src/ros2_java && git clone https://github.com/wmlynar/ros2_java_di
+RUN cd ~/ros2_java_ws/src/ros2_java && git clone https://github.com/wmlynar/ros2_java_di_example
+RUN cd ~/ros2_java_ws/src/ros2_java && git clone https://github.com/wmlynar/ros2_java_tf
+RUN cd ~/ros2_java_ws/src/ros2_java && git clone https://github.com/wmlynar/ros2_java_launch
+RUN cd ~/ros2_java_ws/src/ros2_java/ros2_java_maven && ./install_jars.sh
+RUN cd ~/ros2_java_ws/src/ros2_java/ros2_java_maven && ./install_maven.sh
