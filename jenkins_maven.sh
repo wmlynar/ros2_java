@@ -2,10 +2,12 @@
 
 # checkout repositories
 rm -rf *
-git clone https://github.com/wmlynar/ros2_java
-git clone https://github.com/wmlynar/ros2_java_examples
 git clone https://github.com/wmlynar/ros2_java_maven
-git clone https://github.com/wmlynar/ros2_java_maven_repo
+git clone https://github.com/wmlynar/ros2_java_maven_example
+git clone https://github.com/wmlynar/ros2_java_di
+git clone https://github.com/wmlynar/ros2_java_di_example
+git clone https://github.com/wmlynar/ros2_java_tf
+git clone https://github.com/wmlynar/ros2_java_launch
 
 #rm ros2_java_maven_repo/org/ros2/java/*
 
