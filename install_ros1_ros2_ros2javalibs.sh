@@ -61,10 +61,10 @@ echo org.gradle.jvmargs=-Xmx2048M | tee -a ~/.gradle/gradle.properties
 echo "buildscript { repositories { jcenter() }; dependencies { classpath 'com.android.tools.build:gradle:2.2.0+' } }" | tee /tmp/dummy.gradle
 gradle -b /tmp/dummy.gradle
 
-echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> ~/.bashrc
-echo "export PATH=\$PATH:\${JAVA_HOME}/bin:\${JAVA_HOME}/jre/bin" >> ~/.bashrc
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-export PATH=$PATH:${JAVA_HOME}/bin:${JAVA_HOME}/jre/bin
+#echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> ~/.bashrc
+#echo "export PATH=\$PATH:\${JAVA_HOME}/bin:\${JAVA_HOME}/jre/bin" >> ~/.bashrc
+#export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+#export PATH=$PATH:${JAVA_HOME}/bin:${JAVA_HOME}/jre/bin
 
 sudo apt-get update
 sudo apt-get install -y --no-install-recommends \
@@ -118,7 +118,7 @@ sudo apt install --no-install-recommends -y \
   libtinyxml2-dev
 
 sudo apt-get install liblog4cxx-dev
-RUN apt-get -y install unzip
+apt-get -y install unzip
 
 sudo chown -R $(id -u):$(id -g) /opt
 
