@@ -179,7 +179,7 @@ ament build --symlink-install --isolated --parallel
 
 # install maven packages and compile
 sudo apt -y install maven
-src/ros2_java
+cd src/ros2_java
 git clone https://github.com/wmlynar/ros2_java_maven
 git clone https://github.com/wmlynar/ros2_java_maven_example
 git clone https://github.com/wmlynar/ros2_java_di
