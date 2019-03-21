@@ -162,7 +162,8 @@ RUN cd ~/ament_ws && src/ament/ament_tools/scripts/ament.py build --symlink-inst
 RUN mkdir -p ~/ros2_java_ws/src
 #take the master branch, instead of the release branch
 #RUN cd ~/ros2_java_ws && wget https://raw.githubusercontent.com/ros2/ros2/release-latest/ros2.repos
-RUN cd ~/ros2_java_ws && wget https://raw.githubusercontent.com/ros2/ros2/master/ros2.repos
+#RUN cd ~/ros2_java_ws && wget https://raw.githubusercontent.com/ros2/ros2/master/ros2.repos
+RUN cd ~/ros2_java_ws && wget https://raw.githubusercontent.com/ros2/ros2/crystal/ros2.repos
 RUN cd ~/ros2_java_ws && vcs import src < ros2.repos
 
 RUN cd ~/ros2_java_ws && rosdep init

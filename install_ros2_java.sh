@@ -138,7 +138,8 @@ mkdir -p ros2_java_ws/src
 cd ros2_java_ws
 #take the master branch, instead of the release branch
 #wget https://raw.githubusercontent.com/ros2/ros2/release-latest/ros2.repos
-wget https://raw.githubusercontent.com/ros2/ros2/master/ros2.repos
+#wget https://raw.githubusercontent.com/ros2/ros2/master/ros2.repos
+wget https://raw.githubusercontent.com/ros2/ros2/crystal/ros2.repos
 vcs import src < ros2.repos
 
 sudo rosdep init
