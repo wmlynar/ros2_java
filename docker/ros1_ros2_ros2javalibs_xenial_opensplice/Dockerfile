@@ -154,3 +154,5 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros2_java/lib
 #install opensplice
 RUN apt -y install libopensplice69
 
+#for the purpose of being able to: perl -i -pe 'BEGIN{undef $/;} s/<Id>[^<]*<\/Id>/<Id>$ROS_DOMAIN_ID<\/Id>/smg' /usr/etc/opensplice/config/ospl.xml 
+RUN apt -y install perl
