@@ -124,7 +124,7 @@ RUN cd ~ && unzip -d /opt/gradle gradle-3.5-bin.zip
 ENV PATH /opt/gradle/gradle-3.5/bin:${PATH}
 
 #install openslice dependencies
-sudo apt install libopensplice69
+RUN apt -y install libopensplice69
 
 #install ros2
 #RUN mkdir -p ~/ros2_ws/src
