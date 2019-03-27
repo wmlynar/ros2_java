@@ -178,9 +178,9 @@ RUN cd ~/ros2_java_ws && rm -rf src/ament
 RUN cd ~/ros2_java_ws && rm -rf src/ros2/demos
 RUN cd ~/ros2_java_ws && rm -rf src/ros2/examples
 RUN cd ~/ros2_java_ws && rm -rf src/ros2/rmw_connext
-RUN cd ~/ros2_java_ws && rm -rf src/ros2/rmw_opensplice
+#RUN cd ~/ros2_java_ws && rm -rf src/ros2/rmw_opensplice
 RUN cd ~/ros2_java_ws && rm -rf src/ros2/rosidl_typesupport_connext
-RUN cd ~/ros2_java_ws && rm -rf src/ros2/rosidl_typesupport_opensplice
+#RUN cd ~/ros2_java_ws && rm -rf src/ros2/rosidl_typesupport_opensplice
 RUN cd ~/ros2_java_ws && rm -rf src/ros2/rviz
 RUN cd ~/ros2_java_ws && rm -rf src/ros-visualization
 
