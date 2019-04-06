@@ -1,9 +1,13 @@
 #!/bin/sh
 
+# 1. setup locale
+
 sudo locale-gen en_US en_US.UTF-8
 sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 export LANG=en_US.UTF-8
+
+# 2. instal dependencies
 
 sudo apt-get install -y --no-install-recommends \
     apt-transport-https \
@@ -120,12 +124,7 @@ sudo apt install --no-install-recommends -y \
 sudo apt-get install liblog4cxx-dev
 RUN apt-get -y install unzip
 
-sudo chown -R $(id -u):$(id -g) /opt
-wget https://services.gradle.org/distributions/gradle-3.5-bin.zip
-mkdir -p /opt/gradle
-unzip -d /opt/gradle gradle-3.5-bin.zip
-echo "export PATH=/opt/gradle/gradle-3.5/bin:\${PATH}" >> ~/.bashrc
-export PATH=/opt/gradle/gradle-3.5/bin:${PATH}
+# 3. compile ament with java support
 
 mkdir -p ament_ws/src
 cd ament_ws
@@ -133,6 +132,8 @@ wget https://raw.githubusercontent.com/esteve/ament_java/master/ament_java.repos
 vcs import src < ament_java.repos
 src/ament/ament_tools/scripts/ament.py build --symlink-install --isolated
 cd ..
+
+# 4. compile ros with java support
 
 mkdir -p ros2_java_ws/src
 cd ros2_java_ws
@@ -179,6 +180,8 @@ vcs import src < ros2_java.repos
 
 . ../ament_ws/install_isolated/local_setup.sh
 ament build --symlink-install --isolated --parallel
+
+# 5. install java libraries
 
 # install maven packages and compile
 sudo apt -y install maven

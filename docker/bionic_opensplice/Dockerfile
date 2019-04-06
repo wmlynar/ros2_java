@@ -117,12 +117,6 @@ RUN apt install --no-install-recommends -y \
 RUN apt-get -y install liblog4cxx-dev
 RUN apt-get -y install unzip
 
-RUN chown -R $(id -u):$(id -g) /opt
-RUN cd ~ && wget https://services.gradle.org/distributions/gradle-3.5-bin.zip
-RUN mkdir -p /opt/gradle
-RUN cd ~ && unzip -d /opt/gradle gradle-3.5-bin.zip
-ENV PATH /opt/gradle/gradle-3.5/bin:${PATH}
-
 #install openslice dependencies
 RUN apt -y install libopensplice69
 
