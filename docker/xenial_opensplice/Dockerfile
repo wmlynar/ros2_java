@@ -55,7 +55,7 @@ RUN add-apt-repository ppa:cwchien/gradle
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
     gradle \
-    openjdk-8-jdk-headless
+    openjdk-8-jdk
 RUN mkdir -p /root/.gradle
 RUN echo org.gradle.daemon=true | tee /root/.gradle/gradle.properties
 RUN echo org.gradle.jvmargs=-Xmx2048M | tee -a /root/.gradle/gradle.properties
