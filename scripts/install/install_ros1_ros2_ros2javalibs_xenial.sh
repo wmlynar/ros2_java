@@ -134,6 +134,7 @@ sudo rosdep init
 rosdep update
 # [Ubuntu 16.04]
 rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 python3-lark-parser rti-connext-dds-5.3.1 urdfdom_headers"
+python3 -m pip install -U lark-parser
 
 cd ../..
 

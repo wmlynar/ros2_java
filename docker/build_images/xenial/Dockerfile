@@ -163,6 +163,7 @@ RUN cd ~/ros2_java_ws && vcs import src < ros2.repos
 RUN cd ~/ros2_java_ws && rosdep init
 RUN cd ~/ros2_java_ws && rosdep update
 RUN cd ~/ros2_java_ws && rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 python3-lark-parser rti-connext-dds-5.3.1 urdfdom_headers"
+RUN cd ~/ros2_java_ws && python3 -m pip install -U lark-parser
 
 # remove unneccesary packages
 RUN cd ~/ros2_java_ws && rm -rf src/ament

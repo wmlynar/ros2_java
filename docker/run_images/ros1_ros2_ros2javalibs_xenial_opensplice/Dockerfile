@@ -128,6 +128,7 @@ RUN cd ~/ros2_install && rosdep init
 RUN cd ~/ros2_install && rosdep update
 # [Ubuntu 16.04]
 RUN cd ~/ros2_install/ros2-linux && rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 python3-lark-parser rti-connext-dds-5.3.1 urdfdom_headers"
+RUN cd ~/ros2_install/ros2-linux && python3 -m pip install -U lark-parser
 
 # install ros1
 
