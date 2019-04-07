@@ -58,7 +58,7 @@ sudo add-apt-repository -y ppa:cwchien/gradle
 sudo apt-get update
 sudo apt-get install -y --no-install-recommends \
     gradle \
-    openjdk-8-jdk-headless
+    openjdk-8-jdk
 mkdir -p ~/.gradle
 echo org.gradle.daemon=true | tee ~/.gradle/gradle.properties
 echo org.gradle.jvmargs=-Xmx2048M | tee -a ~/.gradle/gradle.properties
@@ -186,13 +186,11 @@ ament build --symlink-install --isolated --parallel
 # install maven packages and compile
 sudo apt -y install maven
 cd src/ros2_java
-git clone https://github.com/wmlynar/ros2_java_maven
-git clone https://github.com/wmlynar/ros2_java_maven_example
 git clone https://github.com/wmlynar/ros2_java_di
 git clone https://github.com/wmlynar/ros2_java_di_example
 git clone https://github.com/wmlynar/ros2_java_tf
 git clone https://github.com/wmlynar/ros2_java_launch
-cd ros2_java_maven
+cd ros2_java
 install_jars.sh
 install_maven.sh
 cd ../../..
