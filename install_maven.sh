@@ -1,7 +1,5 @@
 #!/bin/sh
 
-mvn install
-
 cd ../ros2_java_di
 mvn install
 
