@@ -116,6 +116,7 @@ RUN apt install --no-install-recommends -y \
 
 RUN apt-get -y install liblog4cxx-dev
 RUN apt-get -y install unzip
+RUN pip3 install lxml
 
 # install ros2
 
