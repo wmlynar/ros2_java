@@ -115,7 +115,7 @@ RUN apt install --no-install-recommends -y \
   libtinyxml2-dev
 
 RUN apt-get -y install liblog4cxx-dev
-RUN apt-get -y install unzip
+RUN apt-get -y install zip unzip
 RUN pip3 install lxml
 
 #install ros2
