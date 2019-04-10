@@ -125,6 +125,9 @@ sudo apt-get -y install liblog4cxx-dev
 sudo apt-get -y install zip unzip
 sudo pip3 install lxml
 
+#install openslice dependencies
+sudo apt -y install libopensplice69
+
 # 3. compile ament with java support
 
 mkdir -p ament_ws/src
@@ -154,7 +157,7 @@ rm -rf src/ament
 rm -rf src/ros2/demos
 rm -rf src/ros2/examples
 rm -rf src/ros2/rmw_connext
-rm -rf src/ros2/rmw_opensplice
+#rm -rf src/ros2/rmw_opensplice
 rm -rf src/ros2/rosidl_typesupport_connext
 rm -rf src/ros2/rosidl_typesupport_opensplice
 rm -rf src/ros2/rviz

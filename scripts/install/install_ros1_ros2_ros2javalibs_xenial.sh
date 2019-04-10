@@ -117,8 +117,9 @@ sudo apt install --no-install-recommends -y \
   libasio-dev \
   libtinyxml2-dev
 
-sudo apt-get install liblog4cxx-dev
-apt-get -y install unzip
+sudo apt-get -y install liblog4cxx-dev
+sudo apt-get -y install zip unzip
+sudo pip3 install lxml
 
 sudo chown -R $(id -u):$(id -g) /opt
 

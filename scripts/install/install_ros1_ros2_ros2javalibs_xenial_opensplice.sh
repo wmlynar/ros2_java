@@ -1,13 +1,9 @@
 #!/bin/sh
 
-# 1. setup locale
-
 sudo locale-gen en_US en_US.UTF-8
 sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 export LANG=en_US.UTF-8
-
-# 2. instal dependencies
 
 sudo apt-get install -y --no-install-recommends \
     apt-transport-https \
@@ -20,7 +16,7 @@ echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -cs) main" | sudo tee
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 421C365BD9FF1F717815A3895523BAEEB01FA116
 echo "deb http://packages.osrfoundation.org/gazebo/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-latest.list
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys D2486D2DD83DB69272AFE98867170598AF249743
-sudo apt-get update
+sudo apt-get update --fix-missing
 sudo apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
@@ -65,10 +61,10 @@ echo org.gradle.jvmargs=-Xmx2048M | tee -a ~/.gradle/gradle.properties
 echo "buildscript { repositories { jcenter() }; dependencies { classpath 'com.android.tools.build:gradle:2.2.0+' } }" | tee /tmp/dummy.gradle
 gradle -b /tmp/dummy.gradle
 
-echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> ~/.bashrc
-echo "export PATH=\$PATH:\${JAVA_HOME}/bin:\${JAVA_HOME}/jre/bin" >> ~/.bashrc
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-export PATH=$PATH:${JAVA_HOME}/bin:${JAVA_HOME}/jre/bin
+#echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> ~/.bashrc
+#echo "export PATH=\$PATH:\${JAVA_HOME}/bin:\${JAVA_HOME}/jre/bin" >> ~/.bashrc
+#export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+#export PATH=$PATH:${JAVA_HOME}/bin:${JAVA_HOME}/jre/bin
 
 sudo apt-get update
 sudo apt-get install -y --no-install-recommends \
@@ -125,73 +121,61 @@ sudo apt-get -y install liblog4cxx-dev
 sudo apt-get -y install zip unzip
 sudo pip3 install lxml
 
-# 3. compile ament with java support
+#install openslice dependencies
+sudo apt -y install libopensplice69
 
-mkdir -p ament_ws/src
-cd ament_ws
-wget https://raw.githubusercontent.com/esteve/ament_java/master/ament_java.repos
-vcs import src < ament_java.repos
-src/ament/ament_tools/scripts/ament.py build --symlink-install --isolated
-cd ..
+sudo chown -R $(id -u):$(id -g) /opt
 
-# 4. compile ros with java support
+# install ros2
 
-mkdir -p ros2_java_ws/src
-cd ros2_java_ws
-#take the master branch, instead of the release branch
-#wget https://raw.githubusercontent.com/ros2/ros2/release-latest/ros2.repos
-#wget https://raw.githubusercontent.com/ros2/ros2/master/ros2.repos
-wget https://raw.githubusercontent.com/ros2/ros2/crystal/ros2.repos
-vcs import src < ros2.repos
+mkdir -p ~/ros2_install
+cd ~/ros2_install
+wget https://github.com/ros2/ros2/releases/download/release-crystal-20190314/ros2-crystal-20190314-linux-xenial-amd64.tar.bz2
+tar xf ros2-crystal-20190314-linux-xenial-amd64.tar.bz2
+cd ~/ros2_install/ros2-linux 
 
 sudo rosdep init
 rosdep update
 # [Ubuntu 16.04]
 rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 python3-lark-parser rti-connext-dds-5.3.1 urdfdom_headers"
+python3 -m pip install -U lark-parser
 
-# remove unneccesary packages
-rm -rf src/ament
-rm -rf src/ros2/demos
-rm -rf src/ros2/examples
-rm -rf src/ros2/rmw_connext
-rm -rf src/ros2/rmw_opensplice
-rm -rf src/ros2/rosidl_typesupport_connext
-rm -rf src/ros2/rosidl_typesupport_opensplice
-rm -rf src/ros2/rviz
-rm -rf src/ros-visualization
+cd ../..
 
-# remove package with ament compilation problem
-rm -rf src/ros2/ros2cli/ros2multicast
+# install ros1
 
-# requires ros1
-rm -rf src/ros2/ros1_bridge
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+sudo apt-get update
+sudo apt-get install ros-kinetic-desktop-full
 
-# package ros2/example_interfaces
-perl -i -pe 'BEGIN{undef $/;} s/find_package\(action_msgs REQUIRED\)//smg' src/ros2/example_interfaces/CMakeLists.txt
-perl -i -pe 'BEGIN{undef $/;} s/\"action\/Fibonacci\.action\"//smg' src/ros2/example_interfaces/CMakeLists.txt
-perl -i -pe 'BEGIN{undef $/;} s/DEPENDENCIES action_msgs//smg' src/ros2/example_interfaces/CMakeLists.txt
+sudo rosdep init
+rosdep update
 
-# package ros2/rcl_interfaces/test_msgs
-perl -i -pe 'BEGIN{undef $/;} s/find_package\(action_msgs REQUIRED\)//smg' src/ros2/rcl_interfaces/test_msgs/CMakeLists.txt
-perl -i -pe 'BEGIN{undef $/;} s/set\(action_files[^\)]*\)//smg' src/ros2/rcl_interfaces/test_msgs/CMakeLists.txt
-perl -i -pe 'BEGIN{undef $/;} s/builtin_interfaces action_msgs unique_identifier_msgs/builtin_interfaces unique_identifier_msgs/smg' src/ros2/rcl_interfaces/test_msgs/CMakeLists.txt
+# install ros2_java_libraries
 
-wget https://raw.githubusercontent.com/wmlynar/ros2_java/master/ros2_java.repos
-vcs import src < ros2_java.repos
+sudo chown -R $(id -u):$(id -g) /opt
+mkdir -p /opt/ros2_java/lib
+cd /opt/ros2_java/lib
+wget https://github.com/wmlynar/ros2_java_maven_repo/raw/master/ros2-java-libs-xenial-opensplice-0.0.1-SNAPSHOT.zip
+unzip ros2-java-libs-xenial-opensplice-0.0.1-SNAPSHOT.zip
+rm ros2-java-libs-xenial-opensplice-0.0.1-SNAPSHOT.zip
 
-. ../ament_ws/install_isolated/local_setup.sh
-ament build --symlink-install --isolated --parallel
+# install ros2_java_launch
 
-# 5. install java libraries
+cd ~
+mkdir -p ros2_java_ws/src/ros2_java
+cd ros2_java_ws/src/ros2_java
+gti clone https://github.com/wmlynar/ros2_java_launch.git
+cd ros2_java_launch
+./install_ros2_java_launch.sh
 
-# install maven packages and compile
-sudo apt -y install maven
-cd src/ros2_java
-git clone https://github.com/wmlynar/ros2_java_di
-git clone https://github.com/wmlynar/ros2_java_di_example
-git clone https://github.com/wmlynar/ros2_java_tf
-git clone https://github.com/wmlynar/ros2_java_launch
-cd ros2_java
-install_jars.sh
-install_maven.sh
-cd ../../..
+# add environment variables
+echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/opt/ros2_java/lib" >> ~/.bashrc
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros2_java/lib
+
+echo "export PATH=/opt/ros2_java/bin:\${PATH}" >> ~/.bashrc
+export PATH=/opt/ros2_java/bin:${PATH}
+
+echo "export  ROS2_LAUNCH_PATH=/home/inovatica/repo_ws/src/autonomiczne-wozki-widlowe/java2" >> ~/.bashrc
+export ROS2_LAUNCH_PATH=$HOME
