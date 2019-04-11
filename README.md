@@ -51,7 +51,7 @@ Build ros2_java binaries for all the platforms using docker
 ```
 git clone https://github.com/wmlynar/ros2_java
 cd ros2_java/docker/build_images
-./build_image_all.sh
+./build_image_all.sh --no-cache
 cd ../../..
 ```
 Update maven repository with jars and zip files with libraries for all the platforms
