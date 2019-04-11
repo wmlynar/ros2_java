@@ -73,7 +73,7 @@ git push -f origin master
 4. Using rqt_console with ros1_ros2_bridge
 ------------------------------------------
 
-Until the bug is resolved you cannot use logging when using ros1_ros2_bridge. Until then ros2_java will publish
+Until the issue https://github.com/ros2/ros1_bridge/issues/159 is resolved you cannot use logging when using ros1_ros2_bridge. Until then ros2_java will publish
 on topic /rosout2 and you need to edit rqt_console to listen to /rosout2 topic.
 
 Please edit file
