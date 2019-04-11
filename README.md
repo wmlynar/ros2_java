@@ -69,3 +69,17 @@ git commit --amend
 git push -f origin master
 ```
 
+4. Using rqt_console with ros1_ros2_bridge
+------------------------------------------
+
+Until the bug is resolved you cannot use logging when using ros1_ros2_bridge. Until then ros2_java will publish
+on topic /rosout2 and you need to edit rqt_console to listen to /rosout2 topic.
+
+Please edit file
+````
+~/ros2_install/ros2-linux/lib/python3.6/site-packages/rqt_console/console.py
+```
+and replace the line /rosout_agg with /rosout2
+```
+        self._topic = '/rosout2'
+```
