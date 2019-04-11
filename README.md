@@ -77,7 +77,7 @@ Until the issue https://github.com/ros2/ros1_bridge/issues/159 is resolved you c
 on topic /rosout2 and you need to edit rqt_console to listen to /rosout2 topic.
 
 Please edit file
-````
+```
 ~/ros2_install/ros2-linux/lib/python3.6/site-packages/rqt_console/console.py
 ```
 and replace the line /rosout_agg with /rosout2
