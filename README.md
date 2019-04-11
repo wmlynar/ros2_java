@@ -84,3 +84,9 @@ and replace the line /rosout_agg with /rosout2
 ```
         self._topic = '/rosout2'
 ```
+
+5. Other important issues to be resolved
+----------------------------------------
+
+https://github.com/ros2/rviz/issues/332
+https://github.com/ros2/rviz/pull/375
