@@ -9,7 +9,7 @@ This fork maintains esteve/ros2_java to work with the latest packages from ros2.
 Choosing the right Ubuntu distribution
 --------------------------------------
 
-Ros2_java uses JNI to access ros2. So it needs libraries that are built for specific operating system. You also need to choose if you want to include 3rd party DDS implementations, like OpenSplice. At this moment the free implementation FastRTPS contains few unfixed bugs in Ubuntu melodic () so you can use OpenSplice until those problems are resolved. Please set one of the following exports
+Ros2_java uses JNI to access ros2. So it needs libraries that are built for specific operating system. You also need to choose if you want to include 3rd party DDS implementations, like OpenSplice. At this moment the free implementation FastRTPS contains few unfixed bugs in Ubuntu melodic (https://github.com/eProsima/Fast-RTPS/issues/457, https://github.com/eProsima/Fast-RTPS/issues/235) so you can use OpenSplice until those problems are resolved. Please set one of the following exports
 
 ```
 export DISTRO=xenial
