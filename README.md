@@ -61,9 +61,10 @@ git clone https://github.com/wmlynar/ros2_java_maven_repo
 cd ros2_java_maven_repo
 ./build_all.sh
 ```
-Update the repository
 
-````
+Push the repository to github
+
+```
 git add *
 git commit --amend
 git push -f origin master
