@@ -9,7 +9,7 @@ This fork maintains esteve/ros2_java to work with the latest packages from ros2.
 Choosing the right Ubuntu distribution
 --------------------------------------
 
-Ros2_java uses JNI to access ros2. So it needs libraries that are built for specific operating system. You also need to choose if you want to include 3rd party DDS implementations, like OpenSplice. At this moment the free implementation FastRTPS contains few unfixed bugs in Ubuntu melodic () so you can use OpenSplice until those problems are resolved. Please set one of the following exports
+Ros2_java uses JNI to access ros2. So it needs libraries that are built for specific operating system. You also need to choose if you want to include 3rd party DDS implementations, like OpenSplice. At this moment the free implementation FastRTPS contains few unfixed bugs in Ubuntu melodic (https://github.com/eProsima/Fast-RTPS/issues/457, https://github.com/eProsima/Fast-RTPS/issues/235) so you can use OpenSplice until those problems are resolved. Please set one of the following exports
 
 ```
 export DISTRO=xenial
@@ -51,7 +51,7 @@ Build ros2_java binaries for all the platforms using docker
 ```
 git clone https://github.com/wmlynar/ros2_java
 cd ros2_java/docker/build_images
-./build_image_all.sh
+./build_image_all.sh --no-cache
 cd ../../..
 ```
 Update maven repository with jars and zip files with libraries for all the platforms
@@ -61,11 +61,31 @@ git clone https://github.com/wmlynar/ros2_java_maven_repo
 cd ros2_java_maven_repo
 ./build_all.sh
 ```
-Update the repository
 
-````
+Push the repository to github
+
+```
 git add *
 git commit --amend
 git push -f origin master
 ```
 
+4. Using rqt_console with ros1_ros2_bridge
+------------------------------------------
+
+Until the issue https://github.com/ros2/ros1_bridge/issues/159 is resolved you cannot use logging when using ros1_ros2_bridge. Until then ros2_java will publish
+on topic /rosout2 and you need to edit rqt_console to listen to /rosout2 topic.
+
+Please edit file
+```
+~/ros2_install/ros2-linux/lib/python3.6/site-packages/rqt_console/console.py
+```
+and replace the line /rosout_agg with /rosout2
+```
+        self._topic = '/rosout2'
+```
+
+5. Other important issues to be resolved
+----------------------------------------
+
+Until those issues are resolved one needs to use ros1 rviz: https://github.com/ros2/rviz/issues/332, https://github.com/ros2/rviz/pull/375
