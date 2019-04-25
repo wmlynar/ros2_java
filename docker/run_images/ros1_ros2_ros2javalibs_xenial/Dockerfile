@@ -120,10 +120,12 @@ RUN pip3 install lxml
 
 # install ros2
 
+RUN export ROS_FILE=crystal-20190408
+
 RUN mkdir -p ~/ros2_install
-RUN cd ~/ros2_install && wget https://github.com/ros2/ros2/releases/download/release-crystal-20190314/ros2-crystal-20190314-linux-xenial-amd64.tar.bz2
-RUN cd ~/ros2_install && tar xf ros2-crystal-20190314-linux-xenial-amd64.tar.bz2
-RUN cd ~/ros2_install && rm ros2-crystal-20190314-linux-xenial-amd64.tar.bz2
+RUN cd ~/ros2_install && wget https://github.com/ros2/ros2/releases/download/release-${ROS_FILE}/ros2-${ROS_FILE}-linux-xenial-amd64.tar.bz2
+RUN cd ~/ros2_install && tar xf ros2-${ROS_FILE}-linux-xenial-amd64.tar.bz2
+RUN cd ~/ros2_install && rm ros2-${ROS_FILE}-linux-xenial-amd64.tar.bz2
 
 RUN cd ~/ros2_install && rosdep init
 RUN cd ~/ros2_install && rosdep update

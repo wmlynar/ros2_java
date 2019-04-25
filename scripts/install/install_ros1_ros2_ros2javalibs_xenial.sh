@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export ROS_FILE=crystal-20190408
+
 sudo locale-gen en_US en_US.UTF-8
 sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
@@ -127,8 +129,9 @@ sudo chown -R $(id -u):$(id -g) /opt
 
 mkdir -p ~/ros2_install
 cd ~/ros2_install
-wget https://github.com/ros2/ros2/releases/download/release-crystal-20190314/ros2-crystal-20190314-linux-xenial-amd64.tar.bz2
-tar xf ros2-crystal-20190314-linux-xenial-amd64.tar.bz2
+wget https://github.com/ros2/ros2/releases/download/release-${ROS_FILE}/ros2-${ROS_FILE}-linux-xenial-amd64.tar.bz2
+rm -rf ~/ros2_install
+tar xf ros2-${ROS_FILE}-linux-xenial-amd64.tar.bz2
 cd ~/ros2_install/ros2-linux 
 
 sudo rosdep init
@@ -152,6 +155,7 @@ rosdep update
 # install ros2_java_libraries
 
 sudo chown -R $(id -u):$(id -g) /opt
+rm -rf /opt/ros2_java/lib
 mkdir -p /opt/ros2_java/lib
 cd /opt/ros2_java/lib
 wget https://github.com/wmlynar/ros2_java_maven_repo/raw/master/ros2-java-libs-xenial-0.0.1-SNAPSHOT.zip
@@ -163,6 +167,7 @@ rm ros2-java-libs-xenial-0.0.1-SNAPSHOT.zip
 cd ~
 mkdir -p ros2_java_ws/src/ros2_java
 cd ros2_java_ws/src/ros2_java
+rm -rf ros2_java_launch
 git clone https://github.com/wmlynar/ros2_java_launch.git
 cd ros2_java_launch
 ./install_ros2_java_launch.sh
