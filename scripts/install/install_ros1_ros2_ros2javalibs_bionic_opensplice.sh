@@ -130,10 +130,10 @@ sudo chown -R $(id -u):$(id -g) /opt
 
 # install ros2
 
+rm -rf ~/ros2_install
 mkdir -p ~/ros2_install
 cd ~/ros2_install
 wget https://github.com/ros2/ros2/releases/download/release-${ROS_FILE}/ros2-${ROS_FILE}-linux-bionic-amd64.tar.bz2
-rm -rf ~/ros2_install
 tar xf ros2-${ROS_FILE}-linux-bionic-amd64.tar.bz2
 cd ~/ros2_install/ros2-linux 
 
