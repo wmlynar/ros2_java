@@ -177,5 +177,5 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros2_java/lib
 echo "export PATH=/opt/ros2_java/bin:\${PATH}" >> ~/.bashrc
 export PATH=/opt/ros2_java/bin:${PATH}
 
-echo "export  ROS2_LAUNCH_PATH=/home/inovatica/repo_ws/src/autonomiczne-wozki-widlowe/java2" >> ~/.bashrc
+echo "export ROS2_LAUNCH_PATH=/home/inovatica/repo_ws/src/autonomiczne-wozki-widlowe/java2" >> ~/.bashrc
 export ROS2_LAUNCH_PATH=$HOME
