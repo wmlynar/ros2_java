@@ -164,7 +164,7 @@ rm ros2-java-libs-bionic-opensplice-0.0.1-SNAPSHOT.zip
 cd ~
 mkdir -p ros2_java_ws/src/ros2_java
 cd ros2_java_ws/src/ros2_java
-gti clone https://github.com/wmlynar/ros2_java_launch.git
+git clone https://github.com/wmlynar/ros2_java_launch.git
 cd ros2_java_launch
 ./install_ros2_java_launch.sh
 
